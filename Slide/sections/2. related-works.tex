@@ -1,0 +1,71 @@
+\section{Các công trình nghiên cứu liên quan}
+
+\begin{frame}{\secname}
+    \begin{table}
+        \begin{tabular}{p{2cm}|p{4cm}|p{4cm}}
+            \toprule
+            Công trình & Đầu vào & Đầu ra \\
+            \midrule
+            \cite{moon_multi-modal_2021} MedViLL & Ảnh X-quang ngực (chụp thẳng) và văn bản báo cáo lâm sàng & Phân loại chẩn đoán, truy xuất ảnh-báo cáo, VQA y tế và tạo báo cáo \\
+            \cite{wang_multi-granularity_2022} MGCA & Ảnh X-quang ngực và văn bản báo cáo y tế & Biểu diễn thị giác dùng để chuyển giao cho tác vụ phân loại, phát hiện, phân vùng \\
+            \cite{yang_lavt_2021} LAVT & Một bức ảnh và một đoạn văn bản mô tả đối tượng cần tìm & Mask phân vùng ở mức độ điểm ảnh của đối tượng \\
+            \cite{li_lvit_2023} LViT & Ảnh y tế (X-quang, CT) và văn bản ghi chú y tế (text annotation) & Mask phân vùng ngữ nghĩa mức độ điểm ảnh
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{\secname}
+    \begin{table}
+        \begin{tabular}{p{2cm}|p{4cm}|p{4cm}}
+            \toprule
+            Công trình & Image Encoder & Text Encoder \\
+            \midrule
+            \cite{moon_multi-modal_2021} MedViLL & ResNet-50 & BERT Wordpiece Tokenizer \\
+            \cite{wang_multi-granularity_2022} MGCA & ViT-B/16 hoặc ResNet-50 & BioClinical BERT \\
+            \cite{yang_lavt_2021} LAVT & Hierarchical Vision Transformer & BERT base model \\
+            \cite{li_lvit_2023} LViT & Nhánh CNN dạng U-shape kết hợp với nhánh ViT dạng U-shape & BERT-Embed
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{\secname}
+    \begin{table}
+        \begin{tabular}{p{2cm}|p{4cm}|p{4cm}}
+            \toprule
+            Công trình & Objective & Kế thừa \\
+            \midrule
+            \cite{moon_multi-modal_2021} MedViLL & Masked Language Modeling (MLM) và Image Report Matching (IRM) & BERT và ResNet \\
+            \cite{wang_multi-granularity_2022} MGCA & InfoNCE loss (cho ITA, CTA) và Cross-entropy (cho CPA) & ViT/ResNet và BERT \\
+            \cite{yang_lavt_2021} LAVT & Cross-entropy & Swin Transformer và BERT \\
+            \cite{li_lvit_2023} LViT & LV (Language-Vision) loss kết hợp Dice loss \& Cross-entropy & U-Net, CNN, ViT và BERT 
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{\secname}
+    \begin{table}
+        \begin{tabular}{p{2cm}|p{8cm}}
+            \toprule
+            Công trình & Đóng góp \\
+            \midrule
+            \cite{moon_multi-modal_2021} MedViLL & Đề xuất cơ chế Bidirectional Auto-regressive (BAR) self-attention giúp giải quyết đồng thời bài toán hiểu (VLU) và tạo văn bản (VLG) \\
+            \cite{wang_multi-granularity_2022} MGCA & Khung căn chỉnh đa phương thức đa độ hạt (MGCA) ở 3 mức: token, instance, và prototype (cấp độ bệnh lý) giúp học đặc trưng toàn diện \\
+            \cite{yang_lavt_2021} LAVT & Thiết kế Pixel-Word Attention Module (PWAM) để hợp nhất thông tin ngôn ngữ và thị giác từ sớm ngay tại các tầng của Vision Transformer \\
+            \cite{li_lvit_2023} LViT & Kết hợp văn bản y tế để bù đắp sự thiếu hụt chất lượng ảnh. Đề xuất cơ chế Exponential Pseudo label Iteration (EPI) nâng cao chất lượng nhãn giả trong học bán giám sát và dùng PLAM để giữ đặc trưng cục bộ
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{\secname}
+    \begin{table}
+        \begin{tabular}{p{2cm}|p{8cm}}
+            \toprule
+            Công trình & Khó khăn \\
+            \midrule
+            \cite{moon_multi-modal_2021} MedViLL & Dữ liệu y tế có chiều không gian lớn, tính không đồng nhất và thiên vị. Việc học chung cho cả tác vụ VLU và VLG rất khó khăn \\
+            \cite{wang_multi-granularity_2022} MGCA & Các phương pháp trước đây bỏ qua quan hệ ngữ nghĩa ở mức bệnh lý. Các vùng chứa bệnh lý (pathology) trong ảnh thường rất nhỏ \\
+            \cite{yang_lavt_2021} LAVT & Các phương pháp cũ dùng bộ giải mã đa phương thức (cross-modal decoder) cồng kềnh, chưa khai thác hết sức mạnh bối cảnh của Transformer \\
+            \cite{li_lvit_2023} LViT & Khó khăn lấy dữ liệu dán nhãn chất lượng cao do chi phí y tế đắt đỏ. Ranh giới tổn thương y tế mờ, khó căn chỉnh chính xác ảnh-text; chi phí tính toán của self-attention cao
+        \end{tabular}
+    \end{table}
+\end{frame}

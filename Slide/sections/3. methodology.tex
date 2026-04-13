@@ -1,0 +1,60 @@
+\section{Phương pháp}
+
+\subsection{Dữ liệu}
+\begin{frame}{\secname: \subsecname}
+\begin{enumerate}
+    \item QaTa-COV19: bao gồm 9258 ảnh X-ray ngực được ghi chú thủ công thương tổn do COVID-19 lần đầu tiên. Nhóm nghiên cứu đã mở rộng ghi chú với sự hỗ trợ của các chuyên gia. Ghi chú tập trung vào cả hai phổi có nhiễm bệnh, số vùng thương tổn, vị trí tương đối của vùng nhiễm bệnh. Ví dụ: "Bilateral pulmonary infection, two infected areas, upper left lung and upper right lung" (tạm dịch: "Cả hai phổi bị nhiễm bệnh, hai vùng bị nhiễm, phía trên phổi trái và phía trên phổi phải").
+    \item MosMesData+ \footnotemark: bao gồm 2729 ảnh CT scan về nhiễm trùng phổi. Ghi chú của tập dữ liệu có cấu trúc tương tự QaTa-COV19. Ví dụ: "Unilateral pulmonary infection, two infected areas, middle lower left lung" (tạm dịch: "Một bên phổi bị nhiễm bệnh, hai vùng bị nhiễm, ở giữa phía dưới phổi trái").
+    \item ESO-CT: bao gồm 286 ảnh X-ray được ghi chú độc lập bởi hai chuyên gia.
+\end{enumerate}
+    \footnotetext[1]{\href{http://medicalsegmentation.com/covid19}{http://medicalsegmentation.com/covid19}}
+\end{frame}
+
+\subsection{Kiến trúc mô hình}
+\begin{frame}{\secname: \subsecname}
+\begin{enumerate}
+    \item Nhánh CNN U-shape
+    \item Nhánh ViT U-shape
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{\secname: \subsecname: CNN}
+    Nhánh CNN nhận đầu vào là một ảnh và đầu ra là mặt nạ phân đoạn. 
+    \begin{columns}
+        \column{0.5\linewidth}
+            \begin{align*}
+                D_i &= DownCNN_i = CTBN \\
+                    &= ReLU(BatchNorm_i(Conv_i(\cdot)))
+            \end{align*}
+            \[Y_{DownCNN, i+1} = MaxPool(D_i(Y_{DownCNN, i}))\]
+            \[Y_{DownCNN, 1} = I\]
+
+        \column{0.5\linewidth}
+            \hspace{0.3\linewidth}
+            \includegraphics[width=0.6\linewidth]{images/cnn-branch.png}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{\secname: \subsecname: ViT}
+    Nhánh ViT nhận đầu vào là đặc trưng ảnh của khối DownCNN đầu tiên cùng với đặc trưng văn bản từ lớp BERT-Embed từ BERT\_12\_768\_12.
+    \begin{columns}
+        \column{0.4\linewidth}
+            \includegraphics[width=\linewidth]{images/vit-branch.png}
+        
+        \column{0.6\linewidth}
+            \[ViT(x) = ViT_2(ViT_1(x))\]
+            \[x' = ViT_1(x) = MHSA(LN(x)) + x\]
+            \[Y = ViT_2(x') = MLP(LN(x')) + x'\]
+            \[x_{img, i} = PatchEmbedding(Y_{DownCNN, i})\]
+            \[Y_{DownViT, 1} = ViT(x_{img, 1} + CTBN(x_{text}))\]
+            \[Y_{DownViT, i+1} = ViT(Y_{DownViT, i} + x_{img, i + 1})\]
+
+    \end{columns}
+\end{frame}
+
+\subsection{Hàm mất mát}
+
+\subsection{Cơ chế sinh nhãn giả}
+\begin{frame}{\secname}
+    Hello world. Tôi là Chung Tín Đạt
+\end{frame}

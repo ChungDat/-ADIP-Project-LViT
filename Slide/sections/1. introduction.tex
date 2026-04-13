@@ -1,0 +1,108 @@
+\section{Giới thiệu}
+
+\subsection{Bối cảnh}
+\begin{frame}{\secname: \subsecname}
+    Trong thập kỷ qua, các mạng học sâu (CNN, Vision Transformer) chủ yếu hoạt động dựa trên \textit{Closed-vocabulary}. Các mô hình này bị giới hạn bởi tập dữ liệu huấn luyện và thiếu khả năng tổng quát hóa khi chuyển sang các miền dữ liệu mới. \\
+    Sự xuất hiện của các mô hình nền tảng (Foundation Models) như CLIP và SAM đã thúc đẩy sự chuyển dịch sang \textit{Open-vocabulary Segmentation}. Các mô hình theo kiến trúc này có khả năng phân đoạn các đối tượng chưa từng xuất hiện trong quá trình huấn luyện thông qua các thông tin mô tả bổ sung (prompts).
+\end{frame}
+
+\begin{frame}{\secname: \subsecname}
+    Tuy nhiên, trong lĩnh vực y khoa, các mô hình phân đoạn bệnh vẫn bị giới hạn bởi sự thiếu sót về tập dữ liệu được dán nhãn chất lượng cao \cite{li_lvit_2023}. \\
+    Bên cạnh dữ liệu hình ảnh, các mô hình có xu hướng phát triển các cơ chế học dựa trên câu nhắc (\textit{Prompting}) nhằm tận dụng tri thức đa phương thức. \\
+    Mô hình tiêu biểu:
+        \begin{itemize}
+            \item \textbf{MedSAM:} Sử dụng \textit{visual prompts} (points/boxes) để hướng dẫn vùng tập trung.
+            \item \textbf{LViT:} Tích hợp \textit{text prompts} để nhúng kiến thức bệnh lý vào quá trình phân đoạn, giúp cải thiện hiệu suất trong điều kiện dữ liệu nhãn hạn chế.
+        \end{itemize}
+\end{frame}
+
+\begin{frame}{\secname: \subsecname}
+    Sự hiệu quả của các kiến trúc kết hợp Prompting bắt nguồn từ khả năng thiết lập một không gian biểu diễn chung giữa thị giác và ngôn ngữ thông qua cơ chế căn chỉnh đa phương thức. Quá trình này tạo ra một bộ lọc ngữ nghĩa mạnh mẽ, giúp mô hình tự động loại bỏ các vùng nhiễu và tập trung tối đa vào các cấu trúc giải phẫu được mô tả cụ thể trong câu lệnh dẫn dắt. \\
+    Thay vì chỉ biết đây là "khối u", văn bản cung cấp các đặc điểm hình thái chuyên sâu: \textit{"bờ không đều", "mật độ thấp", "thâm nhiễm xung quanh"}. \\
+    Ngôn ngữ y khoa giúp mô hình "hiểu" được các ràng buộc sinh học của cơ quan, từ đó đưa ra mặt nạ phân đoạn hợp lý hơn về mặt y khoa.
+\end{frame}
+
+% \begin{frame}{\secname: \subsecname}
+%     Một ưu điểm then chốt của việc sử dụng Prompt là khả năng thích ứng linh hoạt trong điều kiện dữ liệu cực kỳ hạn chế. \\
+%     Nhờ tri thức được kế thừa từ các Foundation model, hệ thống có khả năng thực hiện phân đoạn các bệnh lý mới (Zero-shot) chỉ bằng cách thay đổi mô tả văn bản. Ngoài ra, khi thực hiện Few-shot, thông tin ngôn ngữ đóng vai trò như những "mỏ neo" ngữ nghĩa, giúp mô hình nhanh chóng hội tụ và đạt hiệu suất tối ưu trên các bộ dữ liệu nhỏ mà không gặp phải hiện tượng quá khớp (overfitting).
+% \end{frame}
+
+\subsection{Động lực nghiên cứu}
+\subsubsection{Ý nghĩa khoa học}
+\begin{frame}{\secname: \subsecname: \subsubsecname}
+    Sự phát triển của trí tuệ nhân tạo và thị giác máy tính trong nhiều lĩnh vực đã chứng minh vai trò của việc phân đoạn ảnh tự động. Tuy nhiên, các tập dữ liệu để đáp ứng nhu cầu huấn luyện với các nhãn chất lượng cao vẫn chưa được đáp ứng. Việc tạo ra các nhãn chuẩn này không chỉ tiêu tốn chi phí và thời gian mà còn đòi hỏi sự tham gia trực tiếp của các chuyên gia, khiến việc mở rộng mô hình cho các hiện tượng, bệnh lý hiếm hoặc các thiết bị hình ảnh mới trở nên vô cùng khó khăn.
+\end{frame}
+
+\begin{frame}{\secname: \subsecname: \subsubsecname}
+    Động lực chính của nghiên cứu này xuất phát từ việc khai thác nguồn tri thức lâm sàng dồi dào tồn tại dưới dạng ngôn ngữ tự nhiên. Chỉ sử dụng thông tin hình ảnh để mô hình xử lý là không phù hợp trong thực tế các lĩnh vực. \\
+    Đặc biệt trong y khoa, mỗi hình ảnh chụp chiếu luôn đi kèm với các báo cáo bệnh lý chi tiết, chứa đựng những mô tả tinh vi về đặc điểm hình thái và vị trí tổn thương mà nhãn pixel đơn thuần không thể truyền tải hết. \\
+    Việc phát triển các kiến trúc hướng văn bản không chỉ đơn thuần là một cải tiến về mặt kỹ thuật, mà là một nỗ lực nhằm "dạy" cho máy tính cách hiểu kiến thức chuyên ngành thông qua lăng kính tri thức của chuyên gia.
+\end{frame}
+
+\subsubsection{Ý nghĩa thực tiễn}
+\begin{frame}{\secname: \subsecname: \subsubsecname}
+    Nghiên cứu này còn được thúc đẩy bởi nhu cầu về một hệ thống AI có tính tương tác và linh hoạt. Thay vì một mô hình "hộp đen" chỉ đưa ra kết quả cố định, sự hỗ trợ của text prompt cho phép chuyên gia trực tiếp điều chỉnh và tinh chỉnh vùng phân đoạn thông qua các câu lệnh mô tả, tạo nên một vòng lặp cộng tác giữa người và máy. \\
+    Đây chính là chìa khóa để giải quyết bài toán thiếu hụt dữ liệu, đồng thời mở ra khả năng cá nhân hóa chẩn đoán trong y khoa, giúp AI trở nên gần gũi và hiệu quả hơn trong môi trường lâm sàng thực tế, giúp các mô hình có thể thích nghi nhanh với bệnh lý mới thông qua mô tả thay vì phải huấn luyện lại từ đầu.
+\end{frame}
+
+\subsection{Phát biểu bài toán}
+\begin{frame}{\secname: \subsecname}
+    Phân đoạn ảnh là quá trình nhóm các pixel thuộc cùng một đối tượng ngữ nghĩa và tách biệt khỏi các nhóm đối tượng khác. Có thể hiểu, phân đoạn ảnh là tìm cách làm giảm một \textit{khoảng cách được định nghĩa trước} của các pixel thuộc cùng đối tượng và làm tăng \textit{khoảng cách} với các pixel thuộc đối tượng khác.
+\end{frame}
+
+\begin{frame}{\secname: \subsecname}
+    Với các mô hình phân đoạn kết hợp câu nhắc văn bản (text prompt), có thể định nghĩa như sau: \\
+
+    \textbf{Đầu vào:} \\
+    Một ảnh kích thước $H \times W$ được xem như hàm số $I: \Omega \rightarrow \mathbb{R}^C$ \\
+    $$ \Omega = \{(x, y) | 1 \le x \le H, 1 \le y \le W\} \quad C=\{1, 3\}$$
+    Câu nhắc văn bản là một chuỗi các token $T=\{w_1, w_2, \cdots, w_L\}$
+
+    \bigskip
+    \textbf{Đầu ra:} \\
+    Mặt nạ phân đoạn $M$ tập hợp các giá trị 0, 1 tương ứng đại diện cho pixel thuộc hoặc không thuộc đối tượng.
+    $$
+    M(x, y) =
+        \begin{cases}
+        1 & \text{nếu } (x, y) \in \text{vùng mục tiêu được chỉ định bởi } T \\
+        0 & \text{nếu ngược lại}
+        \end{cases}
+    $$
+\end{frame}
+
+\begin{frame}{\secname: \subsecname}
+    Bài toán phân đoạn dựa trên văn bản là tìm kiếm một ánh xạ $F$ sao cho:
+    $$ F: (I, T) \rightarrow M$$
+
+    \bigskip
+    Quy trình thực hiện: Các mô hình phân đoạn dựa trên câu nhắc văn bản là sự kết hợp giữa hai hàm trích xuất đặc trưng (Encoders), một hàm tương tác giữa các phương thức, một hàm tạo mặt nạ phân đoạn (Decoder).
+\end{frame}
+
+\begin{frame}{\secname: \subsecname}
+    \begin{enumerate}
+        \item Trích xuất đặc trưng thị giác ($E_v$): Biến đổi ảnh thành một vector đặc trưng trong không gian $d$ chiều.
+        $$f_v = E_v(I) \in \mathbb{R}^{h \times w \times d}$$
+        \item Trích xuất đặc trưng ngôn ngữ ($E_l$): Biến đổi văn bản thành một vector đặc trưng trong không gian $d'$ chiều.
+        $$ f_l = E_l(T) \in \mathbb{R}^{L \times d'}$$
+        \item Đưa các đặc trưng về không gian nhúng chung $D$.
+        \begin{itemize}
+            \item Ảnh: $z_v = f_v \cdot \boldsymbol{W_v} + b_v \quad \boldsymbol{W_v} \in \mathbb{R}^{d \times D} \quad z_v \in \mathbb{R}^{(h \times w) \times D}$
+            \item Văn bản: $z_l = f_l \cdot \boldsymbol{W_l} + b_l \quad \boldsymbol{W_l} \in \mathbb{R}^{d' \times D} \quad z_l \in \mathbb{R}^{L \times D}$
+        \end{itemize}
+        \item Tương tác và giải mã mặt nạ ($\phi, P$): Các đặc trưng hình ảnh và văn bản tương tác với nhau để làm giàu thông tin hình ảnh. Sau khi có đặc trưng hợp nhất, hàm cho ra mặt nạ phân đoạn.
+        $$f_u = \phi(z_v, z_l) \quad f_u \in \mathbb{R}^{(h \times w) \times D}$$
+        $$M = P(f_u)$$
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{\secname}
+    \begin{figure}
+        \includegraphics[width=\linewidth]{images/Pipeline.png}
+        \caption{Pipeline hoạt động của mô hình}
+    \end{figure}
+\end{frame}
+
+% \subsection{Đóng góp}
+% \begin{frame}{\secname}
+%     Đồ án này được thực hiện nhằm 
+% \end{frame}

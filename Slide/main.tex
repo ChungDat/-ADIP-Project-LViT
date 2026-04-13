@@ -1,0 +1,168 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[vietnamese]{babel} % Sets language to Vietnamese
+\usepackage{booktabs}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage[style=numeric,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\setbeamertemplate{bibliography item}[book]
+
+\setbeamertemplate{caption}[numbered]
+
+\usepackage{amsfonts}
+
+%------------------------------------------------------------
+%This block of code defines the information to appear in the
+%Title page
+\title[Ứng dụng Xử lý ảnh và video] %optional
+{PHÂN ĐOẠN ẢNH VỚI DỮ LIỆU NHÃN HẠN CHẾ + TEXT PROMPT
+}
+
+\subtitle{Đồ án môn học: Ứng dụng Xử lý ảnh và video}
+
+\author[Đạt]
+{
+    Chung Tín Đạt \small MSSV: 23122024
+}
+
+\institute[HCMUS]
+{
+    Nhóm: CTD\\
+    Giảng viên hướng dẫn: PGS. TS. Lý Quốc Ngọc\\
+    Khoa Công nghệ Thông tin\\
+    Trường Đại học Khoa học Tự nhiên
+}
+
+\date{\today}
+
+\logo{\includegraphics[height=1cm]{images/Logo_HCMUS.png}}
+
+%End of title page configuration block
+%------------------------------------------------------------
+
+
+
+%------------------------------------------------------------
+%The next block of commands puts the table of contents at the 
+%beginning of each section and highlights the current section:
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Mục lục}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+%------------------------------------------------------------
+
+% Start of the document
+\begin{document}
+
+%The next statement creates the title page. The commands above are used to provide information for this frame.
+\frame{\titlepage}
+
+
+%---------------------------------------------------------
+%This block of code is for the table of contents after
+%the title page
+\begin{frame}
+\frametitle{Mục lục}
+\tableofcontents
+\end{frame}
+%---------------------------------------------------------
+
+
+\input{sections/1. introduction.tex}
+\input{sections/2. related-works.tex}
+\input{sections/3. methodology.tex}
+\input{sections/4. implementation}
+\input{sections/5. conclusion.tex}
+
+% Bibliography
+\begin{frame}[allowframebreaks]{Tài liệu tham khảo}
+    \printbibliography
+\end{frame}
+
+% %---------------------------------------------------------
+% %Changing visivility of the text
+% \begin{frame}
+% \frametitle{Sample frame title}
+% This is a text in second frame. For the sake of showing an example.
+
+% \begin{itemize}
+%     \item<1-> Text visible on slide 1
+%     \item<2-> Text visible on slide 2
+%     \item<3> Text visible on slides 3
+%     \item<4-> Text visible on slide 4
+% \end{itemize}
+% \end{frame}
+
+% %---------------------------------------------------------
+
+
+% %---------------------------------------------------------
+% %Example of the \pause command
+% \begin{frame}
+% In this slide \pause
+
+% the text will be partially visible \pause
+
+% And finally everything will be there
+% \end{frame}
+% %---------------------------------------------------------
+
+% \section{Second section}
+
+% %---------------------------------------------------------
+% %Highlighting text
+% \begin{frame}
+% \frametitle{Sample frame title}
+
+% In this slide, some important text will be
+% \alert{highlighted} because it's important.
+% Please, don't abuse it.
+
+% \begin{block}{Remark}
+% Sample text
+% \end{block}
+
+% \begin{alertblock}{Important theorem}
+% Sample text in red box
+% \end{alertblock}
+
+% \begin{examples}
+% Sample text in green box. The title of the block is ``Examples".
+% \end{examples}
+% \end{frame}
+% %---------------------------------------------------------
+
+
+% %---------------------------------------------------------
+% %Two columns
+% \begin{frame}
+% \frametitle{Two-column slide}
+
+% \begin{columns}
+
+% \column{0.5\textwidth}
+% This is a text in first column.
+% $$E=mc^2$$
+% \begin{itemize}
+% \item First item
+% \item Second item
+% \end{itemize}
+
+% \column{0.5\textwidth}
+% This text will be in the second column
+% and on a second tought this is a nice looking
+% layout in some cases.
+% \end{columns}
+% \end{frame}
+% %---------------------------------------------------------
+
+
+\end{document}
