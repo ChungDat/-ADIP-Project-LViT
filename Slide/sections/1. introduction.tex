@@ -60,7 +60,7 @@
 
     \bigskip
     \textbf{Đầu ra:} \\
-    Mặt nạ phân đoạn $M$ tập hợp các giá trị 0, 1 tương ứng đại diện cho pixel thuộc hoặc không thuộc đối tượng.
+    Với một ngưỡng $\alpha$ cho trước, mặt nạ phân đoạn $M$ tập hợp các giá trị 0, 1 tương ứng đại diện cho pixel thuộc hoặc không thuộc đối tượng.
     $$
     M(x, y) =
         \begin{cases}
@@ -89,15 +89,27 @@
             \item Ảnh: $z_v = f_v \cdot \boldsymbol{W_v} + b_v \quad \boldsymbol{W_v} \in \mathbb{R}^{d \times D} \quad z_v \in \mathbb{R}^{(h \times w) \times D}$
             \item Văn bản: $z_l = f_l \cdot \boldsymbol{W_l} + b_l \quad \boldsymbol{W_l} \in \mathbb{R}^{d' \times D} \quad z_l \in \mathbb{R}^{L \times D}$
         \end{itemize}
+        \setcounter{saveenumi}{\value{enumi}}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{\secname: \subsecname}
+    \begin{enumerate}
+        \setcounter{enumi}{\value{saveenumi}}
         \item Tương tác và giải mã mặt nạ ($\phi, P$): Các đặc trưng hình ảnh và văn bản tương tác với nhau để làm giàu thông tin hình ảnh. Sau khi có đặc trưng hợp nhất, hàm cho ra mặt nạ phân đoạn.
         $$f_u = \phi(z_v, z_l) \quad f_u \in \mathbb{R}^{(h \times w) \times D}$$
-        $$M = P(f_u)$$
+        \[M = 
+        \begin{cases}
+            1 & \text{nếu } P(f_u) > \alpha \\
+            0 & \text{nếu ngược lại}
+        \end{cases}
+        \] 
     \end{enumerate}
 \end{frame}
 
 \begin{frame}{\secname}
     \begin{figure}
-        \includegraphics[width=\linewidth]{images/Pipeline.png}
+        \includegraphics[width=\linewidth]{images/pipeline.png}
         \caption{Pipeline hoạt động của mô hình}
     \end{figure}
 \end{frame}

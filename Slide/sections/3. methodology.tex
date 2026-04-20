@@ -3,14 +3,53 @@
 \subsection{Dữ liệu}
 \begin{frame}{\secname: \subsecname}
 \begin{enumerate}
-    \item QaTa-COV19: bao gồm 9258 ảnh X-ray ngực được ghi chú thủ công thương tổn do COVID-19 lần đầu tiên. Nhóm nghiên cứu đã mở rộng ghi chú với sự hỗ trợ của các chuyên gia. Ghi chú tập trung vào cả hai phổi có nhiễm bệnh, số vùng thương tổn, vị trí tương đối của vùng nhiễm bệnh. Ví dụ: "Bilateral pulmonary infection, two infected areas, upper left lung and upper right lung" (tạm dịch: "Cả hai phổi bị nhiễm bệnh, hai vùng bị nhiễm, phía trên phổi trái và phía trên phổi phải").
+    \item QaTa-COV19-v2: bao gồm 9258 ảnh X-ray ngực được ghi chú thủ công thương tổn do COVID-19 lần đầu tiên. Nhóm nghiên cứu đã mở rộng ghi chú với sự hỗ trợ của các chuyên gia. Ghi chú tập trung vào cả hai phổi có nhiễm bệnh, số vùng thương tổn, vị trí tương đối của vùng nhiễm bệnh. Ví dụ: "Bilateral pulmonary infection, two infected areas, upper left lung and upper right lung" (tạm dịch: "Cả hai phổi bị nhiễm bệnh, hai vùng bị nhiễm, phía trên phổi trái và phía trên phổi phải").
     \item MosMesData+ \footnotemark: bao gồm 2729 ảnh CT scan về nhiễm trùng phổi. Ghi chú của tập dữ liệu có cấu trúc tương tự QaTa-COV19. Ví dụ: "Unilateral pulmonary infection, two infected areas, middle lower left lung" (tạm dịch: "Một bên phổi bị nhiễm bệnh, hai vùng bị nhiễm, ở giữa phía dưới phổi trái").
     \item ESO-CT: bao gồm 286 ảnh X-ray được ghi chú độc lập bởi hai chuyên gia.
 \end{enumerate}
     \footnotetext[1]{\href{http://medicalsegmentation.com/covid19}{http://medicalsegmentation.com/covid19}}
 \end{frame}
 
+\begin{frame}{\secname: \subsecname}
+Cụ thể, số lượng mẫu được chia trong từng tập như sau:
+
+\begin{enumerate}
+    \item QaTa-COV19-v2: Train (5716), Val (1429), Test (2113).
+    \item MosMedData+: Train (2183), Val (273), Test (273).
+    \item ESO-CT: Train (182), Val (46), Test (58).
+
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{\secname: \subsecname}
+    \begin{columns}
+        \begin{column}{0.4\linewidth}
+            \includegraphics[width=0.6\linewidth]{images/qata-cov19-v2-covid_1.png}
+
+            \includegraphics[width=0.6\linewidth]{images/qata-cov19-v2-mask_covid_1.png}
+
+            QaTa-COV19-v2 (224 x 224)
+        \end{column}
+
+        \begin{column}{0.4\linewidth}
+            \includegraphics[width=0.6\linewidth]{images/mosmed_bjorke_1.png}
+
+            \includegraphics[width=0.6\linewidth]{images/mosmed_mask_bjorke_1.png}
+
+            MosMedData+ (512 x 512)
+        \end{column}
+    \end{columns}
+\end{frame}
+
 \subsection{Kiến trúc mô hình}
+\begin{frame}{\secname: \subsecname}
+    \includegraphics[width=0.7\linewidth]{images/vit-branch.png}
+\end{frame}
+
+\begin{frame}{\secname: \subsecname}
+    \includegraphics[width=\linewidth]{images/flatten-lvit.png}
+\end{frame}
+
 \begin{frame}{\secname: \subsecname}
 \begin{enumerate}
     \item Nhánh CNN U-shape
@@ -19,7 +58,7 @@
 \end{frame}
 
 \begin{frame}{\secname: \subsecname: CNN}
-    Nhánh CNN nhận đầu vào là một ảnh và đầu ra là mặt nạ phân đoạn. 
+    Nhánh CNN nhận đầu vào là một ảnh và đầu ra là bản đồ xác suất. 
     \begin{columns}
         \column{0.5\linewidth}
             \begin{align*}
@@ -27,7 +66,7 @@
                     &= ReLU(BatchNorm_i(Conv_i(\cdot)))
             \end{align*}
             \[Y_{DownCNN, i+1} = MaxPool(D_i(Y_{DownCNN, i}))\]
-            \[Y_{DownCNN, 1} = I\]
+            \[Y_{DownCNN, 0} = I\]
 
         \column{0.5\linewidth}
             \hspace{0.3\linewidth}
@@ -36,7 +75,7 @@
 \end{frame}
 
 \begin{frame}{\secname: \subsecname: ViT}
-    Nhánh ViT nhận đầu vào là đặc trưng ảnh của khối DownCNN đầu tiên cùng với đặc trưng văn bản từ lớp BERT-Embed từ BERT\_12\_768\_12.
+    Nhánh ViT nhận đầu vào là đặc trưng ảnh của khối DownCNN đầu tiên cùng với đặc trưng văn bản từ lớp BERT-Embed của BERT\_12\_768\_12.
     \begin{columns}
         \column{0.4\linewidth}
             \includegraphics[width=\linewidth]{images/vit-branch.png}
@@ -52,9 +91,73 @@
     \end{columns}
 \end{frame}
 
+\begin{frame}{\secname: \subsecname: ViT}
+    \includegraphics[width=0.7\linewidth]{images/bert.png}
+\end{frame}
+
+\begin{frame}{\secname: \subsecname: PLAM}
+    \includegraphics[width=0.5\linewidth]{images/plam.png}
+\end{frame}
+
+\begin{frame}{\secname: \subsecname: PLAM}
+    Mô-đun PLAM được thiết kế để bảo toàn đặc trưng cục bộ và tăng cường ngữ nghĩa trong đặc trưng văn bản. \\
+    Transformer thường có xu hướng thiên về việc học các đặc trưng toàn cục (global features) và bỏ qua chi tiết cục bộ. PLAM được thiết kế để bù đắp cho sự thiếu hụt này của cơ chế self-attention, giúp bảo tồn tối đa các đặc trưng cục bộ. \\
+     Phép cộng giúp hợp nhất các đặc trưng trên các kênh có ngữ nghĩa tương tự nhau nhằm tiết kiệm tính toán, trong khi phép nối giúp tích hợp thông tin trực quan và bảo tồn các đặc trưng gốc của từng phần. Sau khi nối, mô đun sử dụng cấu trúc MLP để căn chỉnh kích thước, đồng thời hòa trộn thêm các đặc trưng ngữ nghĩa từ văn bản vào hình ảnh.
+\end{frame}
+
 \subsection{Hàm mất mát}
+\begin{frame}{\secname: \subsecname}
+Trong mô hình LViT, hàm mất mát (loss function) được thiết kế khác nhau tùy thuộc vào việc dữ liệu đang được huấn luyện là dữ liệu có nhãn (học giám sát) hay dữ liệu không có nhãn (học bán giám sát):
+    \begin{itemize}
+        \item Đối với dữ liệu có nhãn (Supervised): Mô hình sử dụng trung bình cộng của hai hàm mất mát cơ bản là Dice loss ($L_{Dice}$) và Cross-Entropy ($L_{CE}$).
+        $$L_{Sup} = \frac{1}{2}(L_{Dice} + L_{CE})$$
+        \item Đối với dữ liệu không có nhãn (Unsupervised): Mô hình sử dụng hàm mất mát tương tự như trên nhưng cộng thêm một thành phần hàm mất mát đặc biệt có tên là Language Vision Loss.
+        $$L_{Sup} = \frac{1}{2}(L_{Dice} + L_{CE}) + \alpha L_{LV}$$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{\secname: \subsecname: LV Loss}
+    \begin{align*}
+        L_{LV} = 1 - ImgSim \\
+        ImgSim = \frac{x_{img, p} \cdot x_{img, c}}{|x_{img, p}||x_{img, c}|} \\
+        TextSim = \frac{x_{text, p} \cdot x_{text, c}}{|x_{text, p}||x_{text, c}|}
+    \end{align*}
+    \begin{enumerate}
+        \item Tìm độ tương đồng văn bản (TextSim): Mô hình tính toán độ tương đồng cosine giữa vector đặc trưng văn bản tương ứng với nhãn giả ($x_{text,p}$) và vector đặc trưng văn bản của nhãn đối chiếu ($x_{text,c}$). Từ kết quả này, mô hình sẽ chọn ra văn bản đối chiếu có độ tương đồng cao nhất để lấy mask phân vùng tương ứng của nó.
+        
+        \item Tìm độ tương đồng hình ảnh (ImgSim): Mô hình tính toán độ tương đồng cosine giữa vector đặc trưng của nhãn giả hình ảnh do mô hình dự đoán ra ($x_{img,p}$) và vector đặc trưng của nhãn đối chiếu ($x_{img,c}$).
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{\secname: \subsecname: LV Loss}
+    Mục đích: Hàm mất mát LV được thiết kế để sử dụng trực tiếp các thông tin từ văn bản y tế nhằm giám sát quá trình huấn luyện trên các bức ảnh không có nhãn. \\
+    Cơ chế hoạt động: Vì các cơ quan trên ảnh y tế thường có vị trí tương đối cố định, mô hình sẽ tính toán độ tương đồng cosine (cosine similarity) giữa vector đặc trưng của văn bản tương ứng với nhãn giả (pseudo label) và vector văn bản của các nhãn đối chiếu (contrastive label). \\
+    Mục tiêu là giám sát vị trí phân đoạn, đảm bảo mask tạo ra phải nằm đúng vị trí cơ quan giải phẫu mà văn bản đang mô tả, tránh việc dự đoán sai lệch hoàn toàn. Đối với dữ liệu không nhãn, $\alpha = 0.1$. Đối với dữ liệu đã có nhãn chuẩn (ground truth), hàm LV loss không mang lại lợi ích đáng kể nên hệ số $\alpha$ được đặt bằng 0. \\
+\end{frame}
 
 \subsection{Cơ chế sinh nhãn giả}
-\begin{frame}{\secname}
-    Hello world. Tôi là Chung Tín Đạt
+
+\begin{frame}{\secname: \subsecname}
+Giả định: 
+    
+Trong những vòng huấn luyện gần nhất (khoảng n thế hệ), các trọng số của mô hình thực chất chỉ đang dao động (dither) xung quanh một điểm tối ưu thực sự. Kéo theo đó, mask dự đoán cho ảnh A ở vòng 10, vòng 11, vòng 12... cũng đang dao động qua lại quanh ranh giới phân vùng chuẩn xác của vùng bệnh lý. Nếu chỉ lấy dự đoán của vòng hiện tại, mask có thể bị lệch hoặc nhiễu. Nhưng khi "đúc kết" (lấy trung bình cộng có trọng số) kết quả dự đoán của tất cả các vòng trước đó trên chính bức ảnh A, các sai số dao động sẽ tự triệt tiêu lẫn nhau, tạo ra một mask nhãn giả (pseudo label) mượt mà, ổn định và có độ tin cậy cao hơn rất nhiều để dẫn dắt mô hình học tập.
+
 \end{frame}
+\begin{frame}{\secname: \subsecname}
+    Đối với dữ liệu không có nhãn:
+    \begin{enumerate}
+        \item Mô hình dự đoán mask cho mẫu.
+        \item Nhãn giả được cập nhật ra bằng cách tổng hợp nhãn từ các thế hệ trước trên ảnh hiện tại bằng cơ chế Trung bình động hàm mũ (EMA).
+        $$P_t = \beta P_{t-1} + (1 - \beta) P_t$$
+        Mục tiêu là mask tạo ra phải tương đồng với mask của các thế hệ trước, giúp mô hình không xảy ra trường hợp dự đoán mask quá khác biệt, mô hình dần học được chi tiết phân đoạn.
+        \setcounter{saveenumi}{\value{enumi}}
+    \end{enumerate}
+\end{frame}
+
+% \begin{frame}{\secname: \subsecname}
+%     \begin{enumerate}
+%         \setcounter{enumi}{\value{saveenumi}}
+%         \item So sánh với nhãn đối chiếu thông qua LV Loss: Hệ thống sẽ đem vector đặc trưng của câu text hiện tại đi so sánh với các câu text có trong kho dữ liệu, tìm ra một câu text có độ tương đồng cao nhất. Khi tìm thấy, nó sẽ "mượn" Mask có sẵn tương ứng với câu text đó để làm Nhãn đối chiếu. Sau đó tính toán LV Loss. \\
+%         Mục tiêu là giám sát vị trí phân đoạn, đảm bảo mask tạo ra phải nằm đúng vị trí cơ quan giải phẫu mà văn bản đang mô tả, tránh việc dự đoán sai lệch hoàn toàn.
+%     \end{enumerate}
+% \end{frame}
