@@ -1,0 +1,6 @@
+uv
+1. uv venv --python 3.8 .venv
+2. source .venv/bin/activate
+3. uv pip install torch==1.8.0
+4. uv pip install -r requirements.txt --no-build-isolation
+5. uv pip install --no-deps bert-embedding mxnet==1.4.0

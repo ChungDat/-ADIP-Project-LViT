@@ -5,6 +5,31 @@ build/
 dist/
 wheels/
 *.egg-info
+datasets/
+Source\ code/Covid19/
+Source\ code/MoNuSeg/
+Source\ code/MosMedDataPlus/
 
 # Virtual environments
 .venv
+
+# Latex
+*.aux
+*.bbl
+*.bib
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.lof
+*.out
+*.synctex.gz
+*.run.xml
+*.toc
+
+# IDE
+.vscode/
+
+# Others
+*.zip

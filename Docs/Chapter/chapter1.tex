@@ -1,0 +1,75 @@
+\chapter{Phát biểu bài toán}
+\label{Chapter1}
+\setcounter{secnumdepth}{5}
+
+Phân đoạn ảnh là quá trình nhóm các pixel thuộc cùng một đối tượng ngữ nghĩa và tách biệt khỏi các nhóm đối tượng khác. Có thể hiểu, phân đoạn ảnh là tìm cách làm giảm một \textit{khoảng cách được định nghĩa trước} của các pixel thuộc cùng đối tượng và làm tăng \textit{khoảng cách} với các pixel thuộc đối tượng khác.
+
+Với các mô hình phân đoạn kết hợp câu nhắc văn bản (text prompt), có thể định nghĩa như sau:
+
+\begin{itemize}
+    \item \textbf{Đầu vào:}
+
+    Một ảnh kích thước $H \times W$ được xem như hàm số $I: \Omega \rightarrow \mathbb{R}^C$ \\
+    \[
+        \Omega = \{(x, y) | 1 \le x \le H, 1 \le y \le W\} \quad C=\{1, 3\}
+    \]
+    Câu nhắc văn bản là một chuỗi các token $T=\{w_1, w_2, \cdots, w_L\}$
+
+    \item \textbf{Đầu ra:}
+
+    Một bản đồ xác suất, tại mỗi vị trí pixel, giá trị xác suất là:
+        \begin{itemize}
+            \item Một giá trị thực nằm trong đoạn $[0, 1]$, thể hiện xác suất vị trí là background (hậu cảnh) hay foreground (tiền cảnh) đối với phân đoạn nhị phân.
+            \item Một vector kích thước $n \times 1$, mỗi phần tử trong vector là một giá trị thực nằm trong đoạn $[0, 1]$ sao cho tổng của vector bằng $1$, thể hiện xác suất vị trí thuộc về lớp thứ $i, \quad i = 1, 2, \dots, n$ đối với phân đoạn đa lớp.
+        \end{itemize}
+
+    Với phân đoạn nhị phân, với một ngưỡng $\alpha$ cho trước, mặt nạ phân đoạn $M$ tập hợp các giá trị 0, 1 tương ứng đại diện cho pixel thuộc đối tượng (foreground) hoặc không thuộc đối tượng (background).
+    \[
+    M(x, y) =
+        \begin{cases}
+        1 & \text{nếu } (x, y) \in \text{vùng mục tiêu được chỉ định bởi } T \\
+        0 & \text{nếu ngược lại}
+        \end{cases}
+    \]
+
+    Với phân đoạn đa lớp, mặt nạ phân đoạn $M$ tập hợp các giá trị $i, \quad i = 1, 2, \dots n$ tương ứng đại diện cho lớp của pixel.
+    \[
+    M(x, y) = \arg\max_{i} \mathbf{P} = \arg\max_i \{P_1, P_2, \dots, P_n\}
+    \]
+\end{itemize}
+
+Bài toán phân đoạn dựa trên văn bản là tìm kiếm một ánh xạ $F$ sao cho:
+    \[
+        F: (I, T) \rightarrow M
+    \]
+
+Quy trình thực hiện: Các mô hình phân đoạn dựa trên câu nhắc văn bản là sự kết hợp giữa hai hàm trích xuất đặc trưng (Encoders), một hàm tương tác giữa các phương thức, một hàm tạo mặt nạ phân đoạn (Decoder).
+
+\begin{enumerate}
+    \item Trích xuất đặc trưng thị giác ($E_v$): Biến đổi ảnh thành một vector đặc trưng trong không gian $d$ chiều.
+    $$f_v = E_v(I) \in \mathbb{R}^{h \times w \times d}$$
+
+    \item Trích xuất đặc trưng ngôn ngữ ($E_l$): Biến đổi văn bản thành một vector đặc trưng trong không gian $d'$ chiều.
+    $$ f_l = E_l(T) \in \mathbb{R}^{L \times d'}$$
+
+    \item Đưa các đặc trưng về không gian nhúng chung $D$.
+    \begin{itemize}
+        \item Ảnh: $z_v = f_v \cdot \boldsymbol{W_v} + b_v \quad \boldsymbol{W_v} \in \mathbb{R}^{d \times D} \quad z_v \in \mathbb{R}^{(h \times w) \times D}$
+        \item Văn bản: $z_l = f_l \cdot \boldsymbol{W_l} + b_l \quad \boldsymbol{W_l} \in \mathbb{R}^{d' \times D} \quad z_l \in \mathbb{R}^{L \times D}$
+    \end{itemize}
+
+    \item Tương tác và giải mã mặt nạ ($\phi, P$): Các đặc trưng hình ảnh và văn bản tương tác với nhau để làm giàu thông tin hình ảnh. Sau khi có đặc trưng hợp nhất, hàm cho ra mặt nạ phân đoạn.
+    $$f_u = \phi(z_v, z_l) \quad f_u \in \mathbb{R}^{(h \times w) \times D}$$
+    \[
+    M = 
+    \begin{cases}
+        1 & \text{nếu } P(f_u) > \alpha \\
+        0 & \text{nếu ngược lại}
+    \end{cases}
+    \] 
+\end{enumerate}
+
+\begin{figure}
+    \includegraphics[width=\linewidth]{images/min-pipeline.png}
+    \caption{Pipeline chung của mô hình phân đoạn dựa trên ảnh và text prompt}
+\end{figure}

@@ -58,15 +58,20 @@ Cụ thể, số lượng mẫu được chia trong từng tập như sau:
 \end{frame}
 
 \begin{frame}{\secname: \subsecname: CNN}
-    Nhánh CNN nhận đầu vào là một ảnh và đầu ra là bản đồ xác suất. 
+    Nhánh CNN nhận đầu vào là một ảnh và đầu ra là bản đồ xác suất.
+    % CHI TIẾT CÔNG THỨC TOÁN CONVOLUTION, KÍCH THƯỚC KERNEL, ĐỘ PHÂN GIẢI SAU CNN
     \begin{columns}
         \column{0.5\linewidth}
             \begin{align*}
                 D_i &= DownCNN_i = CTBN \\
                     &= ReLU(BatchNorm_i(Conv_i(\cdot)))
             \end{align*}
-            \[Y_{DownCNN, i+1} = MaxPool(D_i(Y_{DownCNN, i}))\]
-            \[Y_{DownCNN, 0} = I\]
+            \[
+                Y_{DownCNN, i+1} = MaxPool(D_i(Y_{DownCNN, i}))
+            \]
+            \[
+                Y_{DownCNN, 0} = I
+            \]
 
         \column{0.5\linewidth}
             \hspace{0.3\linewidth}
@@ -76,6 +81,7 @@ Cụ thể, số lượng mẫu được chia trong từng tập như sau:
 
 \begin{frame}{\secname: \subsecname: ViT}
     Nhánh ViT nhận đầu vào là đặc trưng ảnh của khối DownCNN đầu tiên cùng với đặc trưng văn bản từ lớp BERT-Embed của BERT\_12\_768\_12.
+    % NÓI RÕ PATCH EMBEDDING LÀ TẠO VISUAL TOKEN
     \begin{columns}
         \column{0.4\linewidth}
             \includegraphics[width=\linewidth]{images/vit-branch.png}
@@ -100,6 +106,7 @@ Cụ thể, số lượng mẫu được chia trong từng tập như sau:
 \end{frame}
 
 \begin{frame}{\secname: \subsecname: PLAM}
+    % NÓI RÕ VÌ SAO TÁCH 3 NHÁNH
     Mô-đun PLAM được thiết kế để bảo toàn đặc trưng cục bộ và tăng cường ngữ nghĩa trong đặc trưng văn bản. \\
     Transformer thường có xu hướng thiên về việc học các đặc trưng toàn cục (global features) và bỏ qua chi tiết cục bộ. PLAM được thiết kế để bù đắp cho sự thiếu hụt này của cơ chế self-attention, giúp bảo tồn tối đa các đặc trưng cục bộ. \\
      Phép cộng giúp hợp nhất các đặc trưng trên các kênh có ngữ nghĩa tương tự nhau nhằm tiết kiệm tính toán, trong khi phép nối giúp tích hợp thông tin trực quan và bảo tồn các đặc trưng gốc của từng phần. Sau khi nối, mô đun sử dụng cấu trúc MLP để căn chỉnh kích thước, đồng thời hòa trộn thêm các đặc trưng ngữ nghĩa từ văn bản vào hình ảnh.
