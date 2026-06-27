@@ -9,6 +9,7 @@ datasets/
 Source\ code/Covid19/
 Source\ code/MoNuSeg/
 Source\ code/MosMedDataPlus/
+kaggle/
 
 # Virtual environments
 .venv

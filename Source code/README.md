@@ -1,163 +1,144 @@
-# LViT
+# LViT: Language meets Vision Transformer in Medical Image Segmentation
 
+Đây là mã nguồn (được tái hiện và tùy chỉnh) cho mô hình **"LViT: Language meets Vision Transformer in Medical Image Segmentation"**.
 
-This repo is the official implementation of "**LViT: Language meets Vision Transformer in Medical Image Segmentation**" 
-[Arxiv](https://arxiv.org/abs/2206.14718), [ResearchGate](https://www.researchgate.net/publication/371833348_LViT_Language_meets_Vision_Transformer_in_Medical_Image_Segmentation), [IEEEXplore](https://ieeexplore.ieee.org/document/10172039)
+**Tham khảo bài báo gốc tại:** 
+- [ArXiv](https://arxiv.org/abs/2206.14718)
+- [ResearchGate](https://www.researchgate.net/publication/371833348_LViT_Language_meets_Vision_Transformer_in_Medical_Image_Segmentation)
+- [IEEEXplore](https://ieeexplore.ieee.org/document/10172039)
 
-![image](https://github.com/HUANGLIZI/LViT/blob/main/IMG/LViT.png)
+---
 
-## Requirements
+## 1. Yêu cầu hệ thống và Cài đặt
 
-Python == 3.7 and install from the ```requirements.txt``` using:
-```angular2html
-pip install -r requirements.txt
+Dự án sử dụng trình quản lý gói `uv` để cài đặt và đồng bộ môi trường.
+
+**Yêu cầu:**
+- Python == 3.12
+- Đã cài đặt `uv` trên hệ thống.
+
+**Cài đặt môi trường:**
+Chạy lệnh sau tại thư mục chứa file `project.toml` để đồng bộ và cài đặt các thư viện phụ thuộc:
+```bash
+uv sync
 ```
-Questions about NumPy version conflict. The NumPy version we use is 1.17.5. We can install bert-embedding first, and install NumPy then.
 
-## Usage
+---
 
-### 1. Data Preparation
-#### 1.1. QaTa-COV19, MosMedData+ and MoNuSeg Datasets (demo dataset)
-The original data can be downloaded in following links:
-* QaTa-COV19 Dataset - [Link (Original)](https://www.kaggle.com/datasets/aysendegerli/qatacov19-dataset)
+## 2. Chuẩn bị dữ liệu
 
-* MosMedData+ Dataset - [Link (Original)](http://medicalsegmentation.com/covid19/) or [Kaggle](https://www.kaggle.com/datasets/maedemaftouni/covid19-ct-scan-lesion-segmentation-dataset)
+Mô hình được huấn luyện riêng biệt trên hai tập dữ liệu: **QaTa-COV19** và **MosMedData+**.
 
-* MoNuSeG Dataset (demo dataset) - [Link (Original)](https://monuseg.grand-challenge.org/Data/)
+### 2.1. Tải dữ liệu ảnh
+- **QaTa-COV19 Dataset:** [Kaggle](https://www.kaggle.com/datasets/aysendegerli/qatacov19-dataset)
+- **MosMedData+ Dataset:** [Kaggle](https://www.kaggle.com/datasets/maedemaftouni/covid19-ct-scan-lesion-segmentation-dataset)
 
-* ESO-CT Dataset [1] [2]
+### 2.2. Tải chú thích văn bản (Text Annotation)
 
-[1] Jin, Dakai, et al. "DeepTarget: Gross tumor and clinical target volume segmentation in esophageal cancer radiotherapy." Medical Image Analysis 68 (2021): 101909.
+**QaTa-COV19:**
+- Train & Val: [Download Link](https://1drv.ms/x/s!AihndoV8PhTDkm5jsTw5dX_RpuRr?e=uaZq6W) (File phân chia ID train/val tải từ [đây](https://1drv.ms/f/c/c3143e7c85766728/QihndoV8PhQggMO2rwAAAAAADo5kj33mUee33g)).
+- Test: [Download Link](https://1drv.ms/x/s!AihndoV8PhTDkj1vvvLt2jDCHqiM?e=954uDF)
 
-[2] Ye, Xianghua, et al. "Multi-institutional validation of two-streamed deep learning method for automated delineation of esophageal gross tumor volume using planning CT and FDG-PET/CT." Frontiers in Oncology 11 (2022): 785788.
+**MosMedData+:**
+- Train: [Download Link](https://1drv.ms/x/s!AihndoV8PhTDguIIKCRfYB9Z0NL8Dw?e=8rj6rY)
+- Val: [Download Link](https://1drv.ms/x/c/c3143e7c85766728/QShndoV8PhQggMMGsQAAAAAAtAgZiRQFYfsAjw)
+- Test: [Download Link](https://1drv.ms/x/c/c3143e7c85766728/QShndoV8PhQggMMHsQAAAAAAdHkwXMxGlgU9Tg)
 
-The text annotation of QaTa-COV19 has been released!
+### 2.3. Sắp xếp cấu trúc dữ liệu ban đầu
+Giải nén dữ liệu ảnh và tải các file chú thích đặt vào thư mục `datasets/` theo cấu trúc sau:
 
-  *(Note: The text annotation of QaTa-COV19 train and val datasets [download link](https://1drv.ms/x/s!AihndoV8PhTDkm5jsTw5dX_RpuRr?e=uaZq6W).
-  The partition of train set and val set of QaTa-COV19 dataset [download link](https://1drv.ms/f/c/c3143e7c85766728/QihndoV8PhQggMO2rwAAAAAADo5kj33mUee33g).
-  The text annotation of QaTa-COV19 test dataset [download link](https://1drv.ms/x/s!AihndoV8PhTDkj1vvvLt2jDCHqiM?e=954uDF).)*
-
-  ***(Note: The contrastive label is available in the repo.)***
-  
-***(Note: The text annotation of MosMedData+ train dataset [download link](https://1drv.ms/x/s!AihndoV8PhTDguIIKCRfYB9Z0NL8Dw?e=8rj6rY).
-The text annotation of MosMedData+ val dataset [download link](https://1drv.ms/x/c/c3143e7c85766728/QShndoV8PhQggMMGsQAAAAAAtAgZiRQFYfsAjw).
-The text annotation of MosMedData+ test dataset [download link](https://1drv.ms/x/c/c3143e7c85766728/QShndoV8PhQggMMHsQAAAAAAdHkwXMxGlgU9Tg).)***
-  
-  *If you use the datasets provided by us, please cite the LViT.*
-
-#### 1.2. Format Preparation
-
-Then prepare the datasets in the following format for easy use of the code:
-
-```angular2html
+```text
 ├── datasets
-    ├── QaTa-Covid19
-    │   ├── Test_Folder
-    |   |   ├── Test_text.xlsx
-    │   │   ├── img
-    │   │   └── labelcol
-    │   ├── Train_Folder
-    |   |   ├── Train_text.xlsx
-    │   │   ├── img
-    │   │   └── labelcol
-    │   └── Val_Folder
-    |	    ├── Val_text.xlsx
-    │       ├── img
-    │       └── labelcol
-    └── MosMedDataPlus
-        ├── Test_Folder
-        |   ├── Test_text.xlsx
-        │   ├── img
-        │   └── labelcol
-        ├── Train_Folder
-        |   ├── Train_text.xlsx
-        │   ├── img
-        │   └── labelcol
-        └── Val_Folder
-            ├── Val_text.xlsx
-            ├── img
-            └── labelcol
+│   ├── Covid19
+│   │   ├── move_data.py
+│   │   ├── Test_text_for_Covid19.xlsx
+│   │   ├── Train_ID.xlsx
+│   │   ├── Train_text_for_Covid19.xlsx
+│   │   └── Val_ID.xlsx
+│   ├── MosMedDataPlus
+│   │   ├── move_data.py
+│   │   ├── Test_text_MosMedData+.xlsx
+│   │   ├── Train_text_MosMedData+ 1.xlsx
+│   │   └── Val_text_MosMedData+ 1.xlsx
+│   ├── QaTa-COV-v2      # Thư mục giải nén ảnh QaTa-COV19
+│   └── MosMedDataPlus   # Thư mục giải nén ảnh MosMedData+
 ```
 
+**Xử lý dữ liệu:**
+Truy cập vào các thư mục `Covid19` hoặc `MosMedDataPlus` và chạy script `move_data.py` tương ứng. Script này sẽ đọc các file Excel ID và tự động phân chia, di chuyển hình ảnh và mask (nhãn) vào đúng các thư mục con `img` và `labelcol`.
 
+### 2.4. Cấu trúc dữ liệu hoàn chỉnh
+Sau khi chạy script chuẩn bị, cấu trúc cây thư mục bên trong `datasets/` sẽ như sau để sẵn sàng đưa vào huấn luyện:
 
-### 2. Training
-
-#### 2.1. Pre-training
-You can replace LVIT with U-Net for pre training and run:
-```angular2html
-python train_model.py
+```text
+├── datasets
+│   ├── Covid19
+│   │   ├── Test_Folder
+│   │   │   ├── Test_text.xlsx
+│   │   │   ├── img
+│   │   │   └── labelcol
+│   │   ├── Train_Folder
+│   │   │   ├── Train_text.xlsx
+│   │   │   ├── img
+│   │   │   └── labelcol
+│   │   └── Val_Folder
+│   │       ├── Val_text.xlsx
+│   │       ├── img
+│   │       └── labelcol
+│   └── MosMedDataPlus
+│       ├── Test_Folder
+│       │   ├── Test_text.xlsx
+│       │   ├── img
+│       │   └── labelcol
+│       ├── Train_Folder
+│       │   ├── Train_text.xlsx
+│       │   ├── img
+│       │   └── labelcol
+│       └── Val_Folder
+│           ├── Val_text.xlsx
+│           ├── img
+│           └── labelcol
 ```
 
-#### 2.2. Training
+---
 
-You can train to get your own model. It should be noted that using the pre-trained model in the step 2.1 will get better performance or you can simply change the model_name from LViT to LViT_pretrain in config.
+## 3. Cấu hình Tham số (Config.py)
 
-```angular2html
-python train_model.py
-```
+Trước khi tiến hành huấn luyện hoặc kiểm thử, cần cấu hình các tham số trong file `Config.py`.
 
+- `task_name`: Tên tập dữ liệu muốn chạy (`'Covid19'` hoặc `'MosMedDataPlus'`).
+- `model_name`: Tên mô hình (mặc định: `'LViT'`).
+- `epochs`: Số epoch tối đa để huấn luyện.
+- `batch_size`: Kích thước batch.
+- `learning_rate`: Tốc độ học (Khuyến nghị: `3e-4` cho Covid19, `1e-3` cho MosMedDataPlus).
+- `session_name`: Tên phiên huấn luyện (được tạo tự động theo ngày giờ, dùng để tạo thư mục lưu weights và logs).
+- `test_session`: Tên thư mục phiên huấn luyện muốn kiểm thử (Ví dụ: `"Session_05.23_14h19"`). **Biến này cần được nhập thủ công khi chạy bước Đánh giá mô hình**.
 
+---
 
+## 4. Huấn luyện Mô hình (Training)
 
-### 3. Evaluation
-
-#### 3.1. Test the Model and Visualize the Segmentation Results
-First, change the session name in ```Config.py``` as the training phase. Then run:
-```angular2html
-python test_model.py
-```
-You can get the Dice and IoU scores and the visualization results. 
-
-
-
-### 4. Results
-
-| Dataset    | 	   Model Name 	   | Dice (%) | IoU (%) |
-| ---------- | ------------------- | -------- | ------- |
-| QaTa-COV19 | U-Net      	       | 79.02    | 69.46   |
-| QaTa-COV19 | LViT-T     	       | 83.66    | 75.11   |
-| MosMedData+ | U-Net      	       | 64.60    |  50.73   |
-| MosMedData+ | LViT-T     	       | 74.57    |  61.33   |
-| MoNuSeg    | U-Net      	       | 76.45    | 62.86   |
-| MoNuSeg    | LViT-T     	       | 80.36    | 67.31   |
-| MoNuSeg    | LViT-T w/o pretrain | 79.98    | 66.83   |
-
-#### 4.1. More Results on other datasets
-
-| Dataset    | 	   Model Name 	   | Dice (%) | IoU (%) |
-| ---------- | ------------------- | -------- | ------- |
-| [BKAI-Poly](https://www.kaggle.com/competitions/bkai-igh-neopolyp/data)       | LViT-TW    	       | 92.07  | 80.93    |
-| ESO-CT | LViT-TW    	       | 68.27    | 57.02    |
-
-
-### 5. Reproducibility
-
-In our code, we carefully set the random seed and set cudnn as 'deterministic' mode to eliminate the randomness. However, there still exsist some factors which may cause different training results, e.g., the cuda version, GPU types, the number of GPUs and etc. The GPU used in our experiments is 2-card NVIDIA V100 (32G) and the cuda version is 11.2. And the upsampling operation has big problems with randomness for multi-GPU cases.
-See https://pytorch.org/docs/stable/notes/randomness.html for more details.
-
-
-
-## Reference
-
-
-* [TransUNet](https://github.com/Beckschen/TransUNet) 
-* [MedT](https://github.com/jeya-maria-jose/Medical-Transformer)
-* [UCTransNet](https://github.com/McGregorWwww/UCTransNet)
-
-
-## Citation
+Sau khi thiết lập file `Config.py` và chuẩn bị dữ liệu, chạy lệnh sau để tiến hành huấn luyện:
 
 ```bash
-@article{li2023lvit,
-  title={Lvit: language meets vision transformer in medical image segmentation},
-  author={Li, Zihan and Li, Yunxiang and Li, Qingde and Wang, Puyang and Guo, Dazhou and Lu, Le and Jin, Dakai and Zhang, You and Hong, Qingqi},
-  journal={IEEE Transactions on Medical Imaging},
-  year={2023},
-  publisher={IEEE}
-}
+python train_model.py
+```
+**Trong quá trình huấn luyện:**
+- Checkpoint của mô hình tốt nhất (best model) sẽ được tự động lưu lại trong thư mục tương ứng: `[task_name]/[model_name]/[session_name]/models/`.
+- File log dạng text sẽ được lưu dưới đuôi `.log` và logs đồ thị của Tensorboard sẽ lưu tại mục `[task_name]/[model_name]/[session_name]/`.
+
+---
+
+## 5. Đánh giá Mô hình (Testing / Evaluation)
+
+Để đánh giá mô hình bằng tập dữ liệu Test:
+1. Mở file `Config.py`, thay đổi biến `test_session` thành phiên cần đánh giá (chuỗi sinh ra từ `session_name`).
+2. Chạy lệnh:
+
+```bash
+python test_model.py
 ```
 
-[![Stargazers repo roster for @HUANGLIZI/LViT](https://reporoster.com/stars/HUANGLIZI/LViT)](https://github.com/HUANGLIZI/LViT/stargazers)
-
-[![Forkers repo roster for @HUANGLIZI/LViT](https://reporoster.com/forks/HUANGLIZI/LViT)](https://github.com/HUANGLIZI/LViT/network/members)
+**Kết quả thu được:**
+- Các chỉ số đo lường hiệu suất (metrics) như **Dice** và **IoU** sẽ được tính toán và in ra terminal.
+- Các ảnh mask phân đoạn (segmentation mask) dự đoán từ mô hình sẽ được xuất ra dưới định dạng ảnh `.jpg` và lưu vào thư mục `[task_name]_visualize_test/` tại thư mục gốc của project.

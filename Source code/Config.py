@@ -15,10 +15,10 @@ os.environ['PYTHONHASHSEED'] = str(seed)
 cosineLR = True  # Use cosineLR or not
 n_channels = 3
 n_labels = 1  # MoNuSeg & Covid19
-epochs = 5000
+epochs = 500
 img_size = 224
-print_frequency = 1
-save_frequency = 5000
+print_frequency = 10
+# save_frequency = 5000
 vis_frequency = 10
 early_stopping_patience = 50
 
@@ -26,7 +26,7 @@ pretrain = False
 # task_name = 'MoNuSeg', 'MosMedDataPlus'
 task_name = 'Covid19'
 learning_rate = 3e-4  # MoNuSeg, MosMedDataPlus: 1e-3, Covid19: 3e-4
-batch_size = 24  # For LViT-T, 2 is better than 4
+batch_size = 24
 
 model_name = 'LViT'
 # model_name = 'LViT_pretrain'
@@ -34,8 +34,9 @@ model_name = 'LViT'
 train_dataset = './datasets/' + task_name + '/Train_Folder/'
 val_dataset = './datasets/' + task_name + '/Val_Folder/'
 test_dataset = './datasets/' + task_name + '/Test_Folder/'
-task_dataset = './datasets/' + task_name + '/Train_Folder/'
-session_name = 'Test_session' + '_' + time.strftime('%m.%d_%Hh%M')
+# task_dataset = './datasets/' + task_name + '/Train_Folder/'
+# session_name = 'Session' + '_' + time.strftime('%m.%d_%Hh%M')
+session_name = 'Session_Kaggle'
 save_path = task_name + '/' + model_name + '/' + session_name + '/'
 model_path = save_path + 'models/'
 tensorboard_folder = save_path + 'tensorboard_logs/'
@@ -63,4 +64,4 @@ def get_CTranS_config():
 
 
 # used in testing phase, copy the session name in training phase
-# test_session = "Test_session_05.23_14h19"  # dice=79.98, IoU=66.83
+test_session = "Session_Kaggle"  # dice=79.98, IoU=66.83
