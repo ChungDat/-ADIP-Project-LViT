@@ -531,7 +531,7 @@ def read_text(filename):
     for i in df.index.values:  # Gets the index of the row number and traverses it
         count = len(df.Description[i].split())
         if count < 9:
-            df.Description[i] = df.Description[i] + ' EOF XXX' * (9 - count)
+            df.loc[i, 'Description'] = df.Description[i] + ' EOF XXX' * (9 - count)
         text[df.Image[i]] = df.Description[i]
     return text  # return dict (key: values)
 
@@ -542,7 +542,7 @@ def read_text_LV(filename):
     for i in df.index.values:  # Gets the index of the row number and traverses it
         count = len(df.Description[i].split())
         if count < 30:
-            df.Description[i] = df.Description[i] + ' EOF XXX' * (30 - count)  # LV_loss: 24
+            df.loc[i, 'Description'] = df.Description[i] + ' EOF XXX' * (30 - count)  # LV_loss: 24
         text[df.Image[i]] = df.Description[i]
     return text  # return dict (key: values)
 
