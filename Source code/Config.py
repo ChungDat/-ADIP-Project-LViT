@@ -23,9 +23,9 @@ vis_frequency = 10
 early_stopping_patience = 50
 
 pretrain = False
-# task_name = 'MoNuSeg', 'MosMedDataPlus'
-task_name = 'MosMedDataPlus'
-learning_rate = 1e-3  # MoNuSeg, MosMedDataPlus: 1e-3, Covid19: 3e-4
+# task_name = 'MoNuSeg', 'MosMedDataPlus', 'Covid19'
+task_name = 'Covid19'
+learning_rate = 3e-4  # MoNuSeg, MosMedDataPlus: 1e-3, Covid19: 3e-4
 batch_size = 24
 
 model_name = 'LViT'
