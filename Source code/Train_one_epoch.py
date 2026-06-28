@@ -41,13 +41,23 @@ def print_summary(epoch, i, nb_batch, loss, loss_name, batch_time,
 #          Train One Epoch
 #=================================================================================
 ##################################################################################
-def train_one_epoch(loader, model, criterion, optimizer, writer, epoch, lr_scheduler, model_type, logger):
+def train_one_epoch(loader, unlabeled_loader, memory_bank, model, criterion, optimizer, writer, epoch, lr_scheduler, model_type, logger):
     logging_mode = 'Train' if model.training else 'Val'
     end = time.time()
     time_sum, loss_sum = 0, 0
     dice_sum, iou_sum, acc_sum = 0.0, 0.0, 0.0
     dices = []
-    for i, (sampled_batch, names) in enumerate(loader, 1):
+    
+    import itertools
+    if getattr(config, 'training_mode', 'supervised') == 'semi_supervised' and unlabeled_loader is not None and model.training:
+        loader_zip = zip(itertools.cycle(loader), unlabeled_loader)
+        loader_len = len(unlabeled_loader)
+        criterion_unsup = WeightedDiceBCE_unsup(dice_weight=0.5, BCE_weight=0.5).cuda()
+    else:
+        loader_zip = zip(loader, [None] * len(loader))
+        loader_len = len(loader)
+
+    for i, ((sampled_batch, names), unlabeled_data) in enumerate(loader_zip, 1):
 
         try:
             loss_name = criterion._get_name()
@@ -68,8 +78,22 @@ def train_one_epoch(loader, model, criterion, optimizer, writer, epoch, lr_sched
 
         preds = model(images, text)
         out_loss = criterion(preds, masks.float())  # Loss
-        # print(model.training)
 
+        if getattr(config, 'training_mode', 'supervised') == 'semi_supervised' and unlabeled_data is not None and model.training:
+            unlabeled_batch, unlabeled_names = unlabeled_data
+            images_u, text_u = unlabeled_batch['image'], unlabeled_batch['text']
+            if text_u.shape[1] > 10:
+                text_u = text_u[:, :10, :]
+            images_u, text_u = images_u.cuda(), text_u.cuda()
+            
+            preds_u = model(images_u, text_u)
+            P_t = memory_bank.update_and_get(unlabeled_names, preds_u).to(preds_u.device)
+            
+            loss_dice_bce_u = criterion_unsup(preds_u, P_t)
+            loss_lv = LV_loss_unsup(preds_u, text_u, masks.float(), text)
+            
+            unsup_loss = loss_dice_bce_u + loss_lv
+            out_loss = out_loss + getattr(config, 'ssl_weight', 0.1) * unsup_loss
 
         if model.training:
             optimizer.zero_grad()
@@ -93,7 +117,7 @@ def train_one_epoch(loader, model, criterion, optimizer, writer, epoch, lr_sched
         # acc_sum += len(images) * train_acc
         dice_sum += len(images) * float(train_dice)
 
-        if i == len(loader):
+        if i == loader_len:
             average_loss = loss_sum / (config.batch_size*(i-1) + len(images))
             average_time = time_sum / (config.batch_size*(i-1) + len(images))
             train_iou_average = iou_sum / (config.batch_size*(i-1) + len(images))
@@ -110,7 +134,7 @@ def train_one_epoch(loader, model, criterion, optimizer, writer, epoch, lr_sched
         torch.cuda.empty_cache()
 
         if i % config.print_frequency == 0:
-            print_summary(epoch + 1, i, len(loader), out_loss, loss_name, batch_time,
+            print_summary(epoch + 1, i, loader_len, out_loss, loss_name, batch_time,
                           average_loss, average_time, train_iou, train_iou_average,
                           train_dice, train_dice_avg, 0, 0,  logging_mode,
                           lr=min(g["lr"] for g in optimizer.param_groups),logger=logger)

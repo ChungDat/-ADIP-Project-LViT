@@ -9,6 +9,16 @@
 
 ---
 
+## Những cải tiến so với bản gốc
+
+Dự án này đã được tùy chỉnh và bổ sung thêm một số tính năng nổi bật so với mã nguồn gốc:
+
+1. **Huấn luyện Bán giám sát (Semi-supervised Learning):** Bổ sung thêm quy trình huấn luyện bán giám sát, cho phép mô hình tận dụng lượng lớn dữ liệu không có nhãn (unlabeled data). Điều này giúp cải thiện hiệu suất phân đoạn và khả năng tổng quát hóa của mô hình trên các ảnh y tế thực tế. Trong mã nguồn [gốc](https://github.com/HUANGLIZI/LViT/tree/main) không có phần này.
+2. **Sử dụng BERT từ Hugging Face `transformers`:** Thay thế việc trích xuất đặc trưng văn bản bằng gói `bert_embedding` cũ sang sử dụng trực tiếp mô hình BERT từ thư viện `transformers`.
+   - **Lý do chuyển đổi:** Thư viện `bert_embedding` hiện tại đã cũ, ít được bảo trì và thường xuyên gặp lỗi tương thích với các phiên bản Python cũng như PyTorch mới. Việc chuyển sang dùng `transformers` đảm bảo tính ổn định, dễ dàng cài đặt môi trường hơn và tận dụng được hệ sinh thái được hỗ trợ mạnh mẽ từ cộng đồng Hugging Face.
+
+---
+
 ## 1. Yêu cầu hệ thống và Cài đặt
 
 Dự án sử dụng trình quản lý gói `uv` để cài đặt và đồng bộ môi trường.
