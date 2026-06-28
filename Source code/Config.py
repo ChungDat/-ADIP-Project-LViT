@@ -15,17 +15,17 @@ os.environ['PYTHONHASHSEED'] = str(seed)
 cosineLR = True  # Use cosineLR or not
 n_channels = 3
 n_labels = 1  # MoNuSeg & Covid19
-epochs = 500
+epochs = 100
 img_size = 224
-print_frequency = 10
+print_frequency = 50
 # save_frequency = 5000
 vis_frequency = 10
 early_stopping_patience = 50
 
 pretrain = False
 # task_name = 'MoNuSeg', 'MosMedDataPlus'
-task_name = 'Covid19'
-learning_rate = 3e-4  # MoNuSeg, MosMedDataPlus: 1e-3, Covid19: 3e-4
+task_name = 'MosMedDataPlus'
+learning_rate = 1e-3  # MoNuSeg, MosMedDataPlus: 1e-3, Covid19: 3e-4
 batch_size = 24
 
 model_name = 'LViT'

@@ -68,7 +68,7 @@ def main_loop(batch_size=config.batch_size, model_type='', tensorboard=True):
     # Load train and val data
     train_tf = transforms.Compose([RandomGenerator(output_size=[config.img_size, config.img_size])])
     val_tf = ValGenerator(output_size=[config.img_size, config.img_size])
-    if config.task_name == 'MoNuSeg':
+    if config.task_name == 'MoNuSeg' or config.task_name == 'MosMedDataPlus':
         train_text = read_text(config.train_dataset + 'Train_text.xlsx')
         val_text = read_text(config.val_dataset + 'Val_text.xlsx')
         train_dataset = ImageToImage2D(config.train_dataset, config.task_name, train_text, train_tf,
