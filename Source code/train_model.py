@@ -84,12 +84,42 @@ def main_loop(batch_size=config.batch_size, model_type='', tensorboard=True):
                                      image_size=config.img_size)
 
 
-    train_loader = DataLoader(train_dataset,
-                              batch_size=config.batch_size,
-                              shuffle=True,
-                              worker_init_fn=worker_init_fn,
-                              num_workers=8,
-                              pin_memory=True)
+    if getattr(config, 'training_mode', 'supervised') == 'semi_supervised':
+        from torch.utils.data import Subset
+        import numpy as np
+        num_train = len(train_dataset)
+        indices = list(range(num_train))
+        np.random.shuffle(indices)
+        split = int(np.floor((1 - getattr(config, 'unlabeled_ratio', 0.75)) * num_train))
+        labeled_idx, unlabeled_idx = indices[:split], indices[split:]
+        
+        labeled_dataset = Subset(train_dataset, labeled_idx)
+        unlabeled_dataset = Subset(train_dataset, unlabeled_idx)
+        
+        train_loader = DataLoader(labeled_dataset,
+                                  batch_size=config.batch_size,
+                                  shuffle=True,
+                                  worker_init_fn=worker_init_fn,
+                                  num_workers=8,
+                                  pin_memory=True)
+                                  
+        unlabeled_loader = DataLoader(unlabeled_dataset,
+                                      batch_size=config.batch_size,
+                                      shuffle=True,
+                                      worker_init_fn=worker_init_fn,
+                                      num_workers=8,
+                                      pin_memory=True)
+        from utils import MemoryBankEPI
+        memory_bank = MemoryBankEPI(beta=getattr(config, 'epi_beta', 0.99))
+    else:
+        train_loader = DataLoader(train_dataset,
+                                  batch_size=config.batch_size,
+                                  shuffle=True,
+                                  worker_init_fn=worker_init_fn,
+                                  num_workers=8,
+                                  pin_memory=True)
+        unlabeled_loader = None
+        memory_bank = None
 
     val_loader = DataLoader(val_dataset,
                             batch_size=config.batch_size,
@@ -158,13 +188,13 @@ def main_loop(batch_size=config.batch_size, model_type='', tensorboard=True):
         # train for one epoch
         model.train(True)
         logger.info('Training with batch size : {}'.format(batch_size))
-        train_one_epoch(train_loader, model, criterion, optimizer, writer, epoch, None, model_type, logger)  # sup
+        train_one_epoch(train_loader, unlabeled_loader, memory_bank, model, criterion, optimizer, writer, epoch, None, model_type, logger)  # sup
 
         # evaluate on validation set
         logger.info('Validation')
         with torch.no_grad():
             model.eval()
-            val_loss, val_dice = train_one_epoch(val_loader, model, criterion,
+            val_loss, val_dice = train_one_epoch(val_loader, None, None, model, criterion,
                                                  optimizer, writer, epoch, lr_scheduler, model_type, logger)
         # =============================================================
         #       Save best model

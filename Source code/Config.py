@@ -23,10 +23,15 @@ vis_frequency = 10
 early_stopping_patience = 50
 
 pretrain = False
-# task_name = 'MoNuSeg', 'MosMedDataPlus', 'Covid19'
-task_name = 'MosMedDataPlus'
+task_name = 'MosMedDataPlus' # 'Covid19' or 'MosMedDataPlus'
 learning_rate = 1e-3  # MoNuSeg, MosMedDataPlus: 1e-3, Covid19: 3e-4
 batch_size = 24
+
+# Semi-supervised learning configurations
+training_mode = 'supervised'  # 'supervised' or 'semi_supervised'
+unlabeled_ratio = 0.75  # 75% of dataset becomes unlabeled data
+ssl_weight = 0.1  # Weight for unsupervised loss
+epi_beta = 0.99  # Beta for MemoryBankEPI
 
 model_name = 'LViT'
 # model_name = 'LViT_pretrain'

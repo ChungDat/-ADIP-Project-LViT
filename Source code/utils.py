@@ -162,28 +162,28 @@ class WeightedDiceCE(nn.Module):
         return dice_CE_loss
 
 
-class WeightedDiceBCE_unsup(nn.Module):
-    def __init__(self, dice_weight=1, BCE_weight=1):
-        super(WeightedDiceBCE_unsup, self).__init__()
-        self.BCE_loss = WeightedBCE(weights=[0.5, 0.5])
-        self.dice_loss = WeightedDiceLoss(weights=[0.5, 0.5])
-        self.BCE_weight = BCE_weight
-        self.dice_weight = dice_weight
+# class WeightedDiceBCE_unsup(nn.Module):
+#     def __init__(self, dice_weight=1, BCE_weight=1):
+#         super(WeightedDiceBCE_unsup, self).__init__()
+#         self.BCE_loss = WeightedBCE(weights=[0.5, 0.5])
+#         self.dice_loss = WeightedDiceLoss(weights=[0.5, 0.5])
+#         self.BCE_weight = BCE_weight
+#         self.dice_weight = dice_weight
 
-    def _show_dice(self, inputs, targets):
-        inputs[inputs >= 0.5] = 1
-        inputs[inputs < 0.5] = 0
-        targets[targets > 0] = 1
-        targets[targets <= 0] = 0
-        hard_dice_coeff = 1.0 - self.dice_loss(inputs, targets)
-        return hard_dice_coeff
+#     def _show_dice(self, inputs, targets):
+#         inputs[inputs >= 0.5] = 1
+#         inputs[inputs < 0.5] = 0
+#         targets[targets > 0] = 1
+#         targets[targets <= 0] = 0
+#         hard_dice_coeff = 1.0 - self.dice_loss(inputs, targets)
+#         return hard_dice_coeff
 
-    def forward(self, inputs, targets, LV_loss):
-        dice = self.dice_loss(inputs, targets)
-        BCE = self.BCE_loss(inputs, targets)
-        dice_BCE_loss = self.dice_weight * dice + self.BCE_weight * BCE + 0.1 * LV_loss
+#     def forward(self, inputs, targets, LV_loss):
+#         dice = self.dice_loss(inputs, targets)
+#         BCE = self.BCE_loss(inputs, targets)
+#         dice_BCE_loss = self.dice_weight * dice + self.BCE_weight * BCE + 0.1 * LV_loss
 
-        return dice_BCE_loss
+#         return dice_BCE_loss
 
 
 class WeightedDiceBCE(nn.Module):
@@ -531,7 +531,7 @@ def read_text(filename):
     for i in df.index.values:  # Gets the index of the row number and traverses it
         count = len(df.Description[i].split())
         if count < 9:
-            df.Description[i] = df.Description[i] + ' EOF XXX' * (9 - count)
+            df.loc[i, 'Description'] = df.Description[i] + ' EOF XXX' * (9 - count)
         text[df.Image[i]] = df.Description[i]
     return text  # return dict (key: values)
 
@@ -542,7 +542,7 @@ def read_text_LV(filename):
     for i in df.index.values:  # Gets the index of the row number and traverses it
         count = len(df.Description[i].split())
         if count < 30:
-            df.Description[i] = df.Description[i] + ' EOF XXX' * (30 - count)  # LV_loss: 24
+            df.loc[i, 'Description'] = df.Description[i] + ' EOF XXX' * (30 - count)  # LV_loss: 24
         text[df.Image[i]] = df.Description[i]
     return text  # return dict (key: values)
 
@@ -648,4 +648,51 @@ class ModelEPI:
         # P_t = beta * P_{t-1} + (1 - beta) * p_t
         P_t = self.beta * P_t_minus_1 + (1 - self.beta) * p_t
         return P_t
+
+
+class WeightedDiceBCE_unsup(nn.Module):
+    def __init__(self, dice_weight=1, BCE_weight=1):
+        super(WeightedDiceBCE_unsup, self).__init__()
+        self.BCE_loss = WeightedBCE(weights=[0.5, 0.5])
+        self.dice_loss = WeightedDiceLoss(weights=[0.5, 0.5])
+        self.BCE_weight = BCE_weight
+        self.dice_weight = dice_weight
+
+    def forward(self, inputs, targets):
+        # targets here are pseudo-labels, which are continuous [0, 1]
+        dice = self.dice_loss(inputs, targets)
+        BCE = self.BCE_loss(inputs, targets)
+        dice_BCE_loss = self.dice_weight * dice + self.BCE_weight * BCE
+        return dice_BCE_loss
+
+
+def LV_loss_unsup(preds_unlabeled, texts_unlabeled, labels_labeled, texts_labeled):
+    """
+    Computes the LV_loss by finding the most similar labeled data based on text embeddings,
+    and returning 1 - cosine_similarity(preds_unlabeled[i], labels_labeled[most_similar_index]).
+    """
+    if len(preds_unlabeled) == 0 or len(labels_labeled) == 0:
+        return torch.tensor(0.0).to(preds_unlabeled.device)
+
+    # LViT text is [B, 10, 768]. Mean over seq len to get [B, 768]
+    emb_unlabeled = texts_unlabeled.mean(dim=1)
+    emb_labeled = texts_labeled.mean(dim=1)
+    
+    # Cosine similarity matrix [N, M]
+    emb_unlabeled_norm = torch.nn.functional.normalize(emb_unlabeled, p=2, dim=1)
+    emb_labeled_norm = torch.nn.functional.normalize(emb_labeled, p=2, dim=1)
+    sim_matrix = torch.matmul(emb_unlabeled_norm, emb_labeled_norm.t())
+    
+    # Find most similar labeled item for each unlabeled item
+    most_similar_indices = torch.argmax(sim_matrix, dim=1)
+    
+    lv_loss = 0.0
+    for i in range(len(preds_unlabeled)):
+        pred_i = preds_unlabeled[i].reshape(1, -1)
+        labeled_j = labels_labeled[most_similar_indices[i]].reshape(1, -1)
+        
+        sim = torch.nn.functional.cosine_similarity(pred_i, labeled_j)
+        lv_loss += (1.0 - sim)
+        
+    return (lv_loss / len(preds_unlabeled)).mean()
 
