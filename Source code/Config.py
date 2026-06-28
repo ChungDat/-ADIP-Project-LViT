@@ -23,9 +23,9 @@ vis_frequency = 10
 early_stopping_patience = 50
 
 pretrain = False
-task_name = 'Covid19' # 'Covid19' or 'MosMedDataPlus'
-learning_rate = 3e-4  # MoNuSeg, MosMedDataPlus: 1e-3, Covid19: 3e-4
-batch_size = 2
+task_name = 'MosMedDataPlus' # 'Covid19' or 'MosMedDataPlus'
+learning_rate = 1e-3  # MoNuSeg, MosMedDataPlus: 1e-3, Covid19: 3e-4
+batch_size = 16
 
 # Semi-supervised learning configurations
 training_mode = 'semi_supervised'  # 'supervised' or 'semi_supervised'
