@@ -1,5 +1,5 @@
 % $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 3.3 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -18,8 +18,8 @@
 
 
 \refsection{0}
-  \datalist[entry]{nty/global//global/global}
-    \entry{li_lvit_2023}{misc}{}
+  \datalist[entry]{nty/global//global/global/global}
+    \entry{li_lvit_2023}{misc}{}{}
       \name{author}{9}{}{%
         {{hash=97349038b99a34940746c1ddc0133723}{%
            family={Li},
@@ -75,10 +75,12 @@
       }
       \strng{namehash}{9b9ef93ec3af842394b19cd1acf4e51e}
       \strng{fullhash}{d24bf10b64d85e3aaca27db3b50cd91e}
+      \strng{fullhashraw}{d24bf10b64d85e3aaca27db3b50cd91e}
       \strng{bibnamehash}{9b9ef93ec3af842394b19cd1acf4e51e}
       \strng{authorbibnamehash}{9b9ef93ec3af842394b19cd1acf4e51e}
       \strng{authornamehash}{9b9ef93ec3af842394b19cd1acf4e51e}
       \strng{authorfullhash}{d24bf10b64d85e3aaca27db3b50cd91e}
+      \strng{authorfullhashraw}{d24bf10b64d85e3aaca27db3b50cd91e}
       \field{sortinit}{L}
       \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
       \field{labelnamesource}{author}
