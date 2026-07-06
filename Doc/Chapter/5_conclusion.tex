@@ -1,0 +1,31 @@
+\chapter{Kết luận}
+\label{Chapter5}
+\setcounter{secnumdepth}{5}
+
+\section{Tổng kết}
+
+Báo cáo đã trình bày quá trình tìm hiểu, phân tích và cài đặt mô hình LViT cho bài toán phân đoạn ảnh y khoa có điều kiện theo câu nhắc văn bản. Khác với các phương pháp phân đoạn truyền thống chỉ dựa trên thông tin thị giác, LViT khai thác đồng thời đặc trưng ảnh và đặc trưng ngôn ngữ nhằm giúp mô hình tập trung tốt hơn vào vùng tổn thương được mô tả trong câu nhắc. Cách tiếp cận này phù hợp với bối cảnh y khoa, nơi thông tin hình ảnh thường đi kèm với mô tả lâm sàng, vị trí tổn thương hoặc ghi chú chuyên môn từ bác sĩ.
+
+Về mặt phương pháp, báo cáo đã phân tích các thành phần chính của kiến trúc LViT, bao gồm nhánh CNN U-shape, nhánh ViT U-shape, bộ mã hóa văn bản, mô-đun Patch Embedding, mô-đun Reconstruct, PLAM, Language-Vision Loss và cơ chế sinh nhãn giả EPI. Nhánh CNN giúp bảo toàn thông tin không gian và chi tiết cục bộ của ảnh, trong khi nhánh ViT hỗ trợ học quan hệ toàn cục giữa các vùng ảnh thông qua cơ chế attention. Đặc trưng văn bản được đưa vào mô hình như một tín hiệu điều kiện, giúp quá trình phân đoạn không chỉ phụ thuộc vào ảnh đầu vào mà còn được định hướng bởi mô tả ngữ nghĩa.
+
+Báo cáo cũng đã trình bày ba pipeline chính của hệ thống: pipeline huấn luyện ngoại tuyến, pipeline suy luận sau huấn luyện và pipeline tính toán hàm mất mát kết hợp với sinh nhãn giả. Các pipeline này cho thấy LViT không chỉ là một mô hình phân đoạn ảnh đơn thuần, mà là một hệ thống đa phương thức có khả năng kết hợp dữ liệu ảnh, văn bản, nhãn chuẩn và nhãn giả. Trong đó, cơ chế EPI và cách sử dụng nhãn mềm giúp mô hình tận dụng dữ liệu không nhãn ở mức phương pháp luận, đồng thời giảm sự phụ thuộc vào các nhãn nhị phân cứng trong quá trình huấn luyện.
+
+Về mặt cài đặt, báo cáo đã mô tả môi trường thử nghiệm, cấu trúc mã nguồn và các điều chỉnh cần thiết để tái lập mô hình trong môi trường hiện tại. Do có sự khác biệt giữa môi trường thực thi của công trình gốc và môi trường thử nghiệm trong báo cáo, một số thành phần mã nguồn cần được chỉnh sửa để tương thích với phiên bản thư viện mới, cách tổ chức dữ liệu và giới hạn tài nguyên trên Kaggle. Những chỉnh sửa này chủ yếu mang tính kỹ thuật, không làm thay đổi bản chất kiến trúc hay ý tưởng phương pháp của LViT.
+
+\section{Hạn chế}
+
+Mặc dù báo cáo đã trình bày đầy đủ kiến trúc và quy trình cài đặt của LViT, quá trình thực nghiệm vẫn còn một số hạn chế. Thứ nhất, báo cáo chỉ tập trung huấn luyện và đánh giá trên các tập dữ liệu có nhãn như QaTa-COV19-v2 và MosMedData+. Các cơ chế học bán giám sát và sinh nhãn giả được phân tích ở mức phương pháp luận, nhưng chưa được triển khai đầy đủ trong phần thực nghiệm. Do đó, báo cáo chưa đánh giá được toàn diện tác động của EPI đối với dữ liệu không nhãn.
+
+Thứ hai, khả năng truy cập dữ liệu y khoa còn bị giới hạn. Tập ESO-CT được đề cập trong phần phương pháp, nhưng không được sử dụng trong thực nghiệm do dữ liệu chưa được công bố công khai tại thời điểm thực hiện báo cáo. Điều này làm giảm phạm vi đánh giá của mô hình trên các loại ảnh và bệnh lý khác nhau.
+
+Thứ ba, quá trình tái lập mô hình chịu ảnh hưởng bởi sự khác biệt về môi trường phần mềm, cấu trúc dữ liệu và tài nguyên tính toán. Một số siêu tham số và bước xử lý cần được điều chỉnh để phù hợp với môi trường Kaggle, vì vậy kết quả thực nghiệm có thể khác so với công trình gốc nếu điều kiện huấn luyện không hoàn toàn giống nhau.
+
+\section{Hướng phát triển}
+
+Trong tương lai, hướng phát triển đầu tiên là hoàn thiện phần thực nghiệm bán giám sát bằng cách triển khai đầy đủ cơ chế sinh nhãn giả EPI trên dữ liệu không nhãn. Việc này sẽ giúp đánh giá rõ hơn khả năng tận dụng dữ liệu y khoa chưa được chú thích, vốn là một vấn đề quan trọng trong thực tế do chi phí gán nhãn cao.
+
+Hướng phát triển tiếp theo là mở rộng đánh giá trên nhiều bộ dữ liệu và nhiều loại ảnh y khoa hơn, chẳng hạn CT, MRI, X-ray hoặc ảnh mô bệnh học. Việc thử nghiệm trên nhiều miền dữ liệu khác nhau sẽ giúp kiểm tra khả năng tổng quát hóa của LViT, đồng thời làm rõ mức độ phụ thuộc của mô hình vào cấu trúc câu nhắc văn bản và chất lượng chú thích.
+
+Ngoài ra, có thể nghiên cứu thêm các cách mã hóa văn bản mạnh hơn thay vì chỉ sử dụng lớp embedding của BERT. Việc khai thác sâu hơn ngữ cảnh trong câu mô tả y khoa có thể giúp mô hình hiểu tốt hơn các quan hệ phức tạp như vị trí tổn thương, mức độ lan rộng, số lượng vùng bệnh lý hoặc đặc điểm hình thái. Bên cạnh đó, các mô hình nền tảng y khoa hiện đại cũng có thể được tích hợp để cải thiện khả năng căn chỉnh giữa đặc trưng ảnh và đặc trưng ngôn ngữ.
+
+Tóm lại, LViT là một hướng tiếp cận tiềm năng cho bài toán phân đoạn ảnh y khoa đa phương thức. Bằng cách kết hợp thông tin thị giác và ngôn ngữ, mô hình có thể tận dụng tốt hơn tri thức mô tả từ chuyên gia và hỗ trợ phân đoạn theo ngữ cảnh cụ thể. Dù vẫn còn một số hạn chế trong quá trình tái lập và thực nghiệm, báo cáo đã làm rõ được cơ sở phương pháp, kiến trúc mô hình và các vấn đề kỹ thuật quan trọng khi triển khai LViT trong thực tế.

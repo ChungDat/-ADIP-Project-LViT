@@ -70,8 +70,13 @@ if __name__ == '__main__':
         model_type = config.model_name
         model_path = "./Covid19/" + model_type + "/" + test_session + "/models/best_model-" + model_type + ".pth.tar"
     
+    elif config.task_name == "MosMedDataPlus":
+        test_num = 1500
+        model_type = config.model_name
+        model_path = "./MosMedDataPlus/" + model_type + "/" + test_session + "/models/best_model-" + model_type + ".pth.tar"
+
     save_path = config.task_name + '/' + model_type + '/' + test_session + '/'
-    vis_path = "./" + config.task_name + '_visualize_test/'
+    vis_path = "./" + config.task_name + '_' + test_session + '_visualize_test/'
     if not os.path.exists(vis_path):
         os.makedirs(vis_path)
 

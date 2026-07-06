@@ -69,4 +69,4 @@ def get_CTranS_config():
 
 
 # used in testing phase, copy the session name in training phase
-test_session = "Session_Kaggle"  # dice=79.98, IoU=66.83
+test_session = "Supervised"  # dice=79.98, IoU=66.83

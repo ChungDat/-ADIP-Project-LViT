@@ -142,7 +142,7 @@ python train_model.py
 ## 5. Đánh giá Mô hình (Testing / Evaluation)
 
 Để đánh giá mô hình bằng tập dữ liệu Test:
-1. Mở file `Config.py`, thay đổi biến `test_session` thành phiên cần đánh giá (chuỗi sinh ra từ `session_name`).
+1. Mở file `Config.py`, thay đổi biến `test_session` thành phiên cần đánh giá (chuỗi sinh ra từ `session_name`) và biến `task_name` thành tập dữ liệu cần đánh giá.
 2. Chạy lệnh:
 
 ```bash

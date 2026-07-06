@@ -21,11 +21,10 @@
 
 % Tài liệu tham khảo
 \usepackage[
-	sorting=nty,
-	backend=bibtex,
-	defernumbers=true]{biblatex}
+	sorting=none,
+	backend=bibtex]{biblatex}
 \usepackage[unicode]{hyperref} % Bookmark tiếng Việt
-\addbibresource{References/references.bib}
+\addbibresource{references.bib}
 
 \makeatletter
 \def\blx@maxline{77}
@@ -38,6 +37,7 @@
 % Chèn và định dạng mã nguồn
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{dirtree}
 
 % Định nghĩa màu sắc
 \definecolor{codeblue}{rgb}{0,0,1}
@@ -175,10 +175,11 @@
 %\pagenumbering{arabic} % Đánh số 1, 2, 3, ...
 
 % Các chương nội dung
-\include{Chapter/chapter1}
-\include{Chapter/chapter2}
-% \include{Chapter/chapter3}
-% \include{Chapter/chapter4}
+\include{Chapter/1_introduction.tex}
+\include{Chapter/2_related-works.tex}
+\include{Chapter/3_methodology.tex}
+\include{Chapter/4_implementation.tex}
+\include{Chapter/5_conclusion.tex}
 
 
 
@@ -188,6 +189,7 @@
 
 % In tài liệu tham khảo
 % \addcontentsline{toc}{chapter}{Tài liệu tham khảo}
+\printbibliography[title={Tài liệu tham khảo}]
 % \chapter*{Tài liệu tham khảo}
 
 % \begin{enumerate}

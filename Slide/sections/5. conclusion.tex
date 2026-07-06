@@ -1,7 +1,69 @@
-\section{Kết luận và hướng phát triển}
+\section{Tổng kết}
 
-\subsection{Kết luận}
-\begin{frame}{\secname: \subsecname}
+\begin{frame}{\secname: Tổng kết}
+\begin{itemize}
+    \item Báo cáo đã tìm hiểu, phân tích và cài đặt LViT cho bài toán phân đoạn ảnh y khoa theo câu nhắc văn bản.
+    \item LViT kết hợp đặc trưng ảnh và ngôn ngữ, giúp mô hình định hướng vùng tổn thương theo mô tả lâm sàng.
+    \item Cách tiếp cận này phù hợp với dữ liệu y khoa, nơi ảnh thường đi kèm ghi chú vị trí, mức độ hoặc đặc điểm bệnh lý.
+\end{itemize}
 \end{frame}
 
-\subsection{Hướng phát triển}
+\begin{frame}{\secname: Tổng kết}
+\begin{itemize}
+    \item Báo cáo đã phân tích các thành phần chính: CNN U-shape, ViT U-shape, BERT embedding, Patch Embedding, Reconstruct và PLAM.
+    \item Nhánh CNN giữ chi tiết cục bộ, trong khi nhánh ViT học quan hệ toàn cục giữa các vùng ảnh.
+    \item Văn bản được dùng như tín hiệu điều kiện, giúp quá trình phân đoạn không chỉ phụ thuộc vào ảnh đầu vào.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\secname: Tổng kết}
+\begin{itemize}
+    \item Báo cáo đã trình bày pipeline huấn luyện, suy luận và tính loss kết hợp với sinh nhãn giả.
+    \item Language-Vision Loss và EPI cho thấy tiềm năng khai thác dữ liệu ít nhãn hoặc không nhãn.
+    \item Phần cài đặt đã được điều chỉnh để tương thích với môi trường Kaggle, dữ liệu thực nghiệm và tài nguyên giới hạn.
+\end{itemize}
+\end{frame}
+
+\section{Hạn chế}
+
+\begin{frame}{\secname: Hạn chế}
+\begin{itemize}
+    \item Thực nghiệm chủ yếu tập trung trên QaTa-COV19-v2 và MosMedData+, chưa đánh giá đầy đủ trên nhiều miền dữ liệu khác.
+    \item Cơ chế bán giám sát và sinh nhãn giả EPI mới được tái hiện ở mức hạn chế, chưa tương đương hoàn toàn với công trình gốc.
+    \item Tập ESO-CT không được sử dụng do chưa được công bố công khai, làm giảm phạm vi đánh giá.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\secname: Hạn chế}
+\begin{itemize}
+    \item Kết quả tái lập chịu ảnh hưởng bởi khác biệt môi trường phần mềm, cấu trúc dữ liệu và cách chia tập.
+    \item Giới hạn tài nguyên trên Kaggle khiến quá trình huấn luyện khó tái hiện đầy đủ điều kiện của công trình gốc.
+    \item Một số siêu tham số và bước tiền xử lý phải điều chỉnh, nên kết quả có thể khác so với kết quả công bố.
+\end{itemize}
+\end{frame}
+
+\section{Hướng phát triển}
+
+\begin{frame}{\secname: Hướng phát triển}
+\begin{itemize}
+    \item Hoàn thiện thực nghiệm bán giám sát bằng cách triển khai đầy đủ cơ chế sinh và cập nhật nhãn giả EPI.
+    \item Mở rộng đánh giá trên nhiều loại ảnh y khoa hơn như CT, MRI, X-ray và ảnh mô bệnh học.
+    \item Kiểm tra khả năng tổng quát hóa của LViT trên nhiều bệnh lý, nhiều cách chia dữ liệu và nhiều dạng chú thích văn bản.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\secname: Hướng phát triển}
+\begin{itemize}
+    \item Nghiên cứu các bộ mã hóa văn bản mạnh hơn để khai thác tốt hơn ngữ cảnh trong mô tả y khoa.
+    \item Tích hợp các mô hình nền tảng y khoa nhằm cải thiện căn chỉnh giữa đặc trưng ảnh và đặc trưng ngôn ngữ.
+    \item Tối ưu quy trình sinh, lọc và cập nhật nhãn giả để giảm chi phí chú thích dữ liệu y khoa.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\secname: Kết luận chung}
+\begin{itemize}
+    \item LViT là hướng tiếp cận tiềm năng cho phân đoạn ảnh y khoa đa phương thức.
+    \item Việc kết hợp thị giác và ngôn ngữ giúp tận dụng tri thức mô tả từ chuyên gia.
+    \item Dù còn hạn chế trong tái lập, báo cáo đã làm rõ kiến trúc, cơ sở phương pháp và các vấn đề kỹ thuật khi triển khai LViT.
+\end{itemize}
+\end{frame}
