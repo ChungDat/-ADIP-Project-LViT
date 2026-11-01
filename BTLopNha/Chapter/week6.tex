@@ -1,0 +1,77 @@
+\chapter{Buổi 6}
+\label{Chapter6}
+\setcounter{secnumdepth}{5}
+
+\section*{Câu 1}
+\addcontentsline{toc}{section}{Câu 1}
+So sánh làm trơn bằng morphology và làm trơn bằng trung vị/trung bình/Gaussian.
+
+Làm trơn bằng morphology dựa trên các phép toán hình thái như erosion, dilation, opening và closing; kết quả phụ thuộc mạnh vào hình dạng và kích thước của phần tử cấu trúc. Ví dụ, opening có thể loại bỏ các vật thể sáng nhỏ hơn phần tử cấu trúc, còn closing có thể lấp các lỗ tối nhỏ hoặc nối các khe hở hẹp. Vì vậy, morphology không chỉ làm trơn theo nghĩa giảm dao động mức xám, mà còn làm trơn theo hình dạng hình học của đối tượng.
+
+Ngược lại, các bộ lọc trung bình và Gaussian là các phép lọc tuyến tính dựa trên việc lấy tổ hợp trọng số của các pixel lân cận. Các phương pháp này làm giảm nhiễu ngẫu nhiên khá tốt, nhưng thường làm mờ biên và làm mất chi tiết nhỏ.
+
+Bộ lọc trung vị là phép lọc phi tuyến. Nó đặc biệt hiệu quả với nhiễu muối tiêu vì có thể loại bỏ các giá trị bất thường mà vẫn giữ biên tốt hơn so với lọc trung bình. Tuy nhiên, bộ lọc trung vị vẫn không khai thác trực tiếp hình dạng của đối tượng như morphology.
+
+Tóm lại, làm trơn bằng morphology phù hợp khi ta quan tâm đến hình dạng, kích thước và cấu trúc của đối tượng, chẳng hạn loại bỏ vật thể nhỏ, lấp lỗ nhỏ hoặc nối khe hở. Trong khi đó, lọc trung vị, trung bình và Gaussian phù hợp hơn khi mục tiêu chính là giảm nhiễu theo mức xám trong một vùng lân cận.
+
+\section*{Câu 2}
+\addcontentsline{toc}{section}{Câu 2}
+So sánh gradient morphology và gradient kernel.
+
+\textbf{Gradient morphology} là gradient được xây dựng từ các phép toán hình thái. Với ảnh $A$ và phần tử cấu trúc $B$, một định nghĩa thường dùng là:
+
+\begin{equation}
+    G_m = (A \oplus B) - (A \ominus B),
+\end{equation}
+
+trong đó $A \oplus B$ là dilation và $A \ominus B$ là erosion. Dilation làm mở rộng các vùng sáng, erosion làm co các vùng sáng, nên hiệu giữa hai kết quả sẽ lớn tại những vị trí có thay đổi mạnh về hình dạng hoặc biên đối tượng. Vì vậy, gradient morphology thường được dùng để nhấn mạnh biên theo cấu trúc hình học của ảnh.
+
+\textbf{Gradient kernel} là gradient tính bằng các mặt nạ tích chập, chẳng hạn Sobel, Prewitt hoặc Roberts. Các kernel này xấp xỉ đạo hàm theo hướng ngang và hướng dọc:
+
+\begin{equation}
+    G = \sqrt{G_x^2 + G_y^2},
+\end{equation}
+
+trong đó $G_x$ và $G_y$ lần lượt là gradient theo trục $x$ và trục $y$. Phương pháp này đo sự thay đổi cường độ mức xám giữa các pixel lân cận, nên rất phù hợp để phát hiện biên dựa trên biến thiên sáng tối.
+
+Điểm khác nhau chính là gradient morphology phụ thuộc vào phần tử cấu trúc, còn gradient kernel phụ thuộc vào mặt nạ tích chập. Gradient morphology có thể điều khiển kích thước và hình dạng biên được phát hiện thông qua $B$, đồng thời thường bền hơn với một số nhiễu nhỏ nếu chọn phần tử cấu trúc phù hợp. Ngược lại, gradient kernel đơn giản, tính toán nhanh và cho biết hướng biến thiên cường độ, nhưng dễ nhạy với nhiễu vì đạo hàm khuếch đại các thay đổi nhỏ trong ảnh.
+
+\section*{Câu 3}
+\addcontentsline{toc}{section}{Câu 3}
+Cho ảnh các hạt gạo trên nền đen, làm thế nào để đếm số lượng hạt gạo?
+
+Vì các hạt gạo là các vật thể sáng trên nền đen, ta có thể đếm số lượng hạt bằng cách tách chúng khỏi nền rồi rút trích các thành phần liên thông.
+
+\begin{enumerate}
+    \item \textbf{Tiền xử lý:} Nếu ảnh có nền không đều hoặc có nhiễu nhỏ, có thể dùng lọc trung vị hoặc Gaussian để giảm nhiễu nhẹ trước khi phân đoạn.
+
+    \item \textbf{Làm nổi hạt gạo:} Áp dụng toán tử \textbf{top-hat} để nhấn mạnh các vật thể sáng nhỏ hơn phần tử cấu trúc.
+
+    \item \textbf{Nhị phân hóa:} Chọn một ngưỡng phù hợp để biến ảnh top-hat thành ảnh nhị phân, trong đó pixel thuộc hạt gạo có giá trị 1 và nền có giá trị 0.
+
+    \item \textbf{Đếm thành phần liên thông:} Sau khi có ảnh nhị phân sạch, gán nhãn các thành phần liên thông. Mỗi thành phần liên thông tương ứng với một hạt gạo, nên số nhãn thu được chính là số lượng hạt gạo.
+\end{enumerate}
+
+\section*{Câu 4}
+\addcontentsline{toc}{section}{Câu 4}
+So sánh phương pháp reconstruction rút trích chữ ra khỏi nền và phương pháp top-hat.
+
+\textbf{Phương pháp top-hat} dùng opening để ước lượng nền, sau đó lấy ảnh gốc trừ đi ảnh đã opening:
+
+\begin{equation}
+    T = A - (A \circ B).
+\end{equation}
+
+Nếu chữ là các chi tiết sáng nhỏ hơn phần tử cấu trúc $B$, top-hat sẽ làm nổi các nét chữ trên nền. Phương pháp này đơn giản, dễ cài đặt và tính toán nhanh. Tuy nhiên, kết quả phụ thuộc mạnh vào kích thước và hình dạng của $B$. Nếu $B$ quá nhỏ, nền không được loại bỏ tốt; nếu $B$ quá lớn hoặc không phù hợp, một phần nét chữ có thể bị méo, bị mất hoặc xuất hiện nhiễu giả.
+
+\textbf{Phương pháp reconstruction} thường bắt đầu bằng một ảnh marker, ví dụ ảnh sau erosion hoặc opening, rồi tái tạo lại các thành phần phù hợp dưới ràng buộc của ảnh gốc gọi là mask. Quá trình reconstruction chỉ khôi phục những vùng liên thông có quan hệ với marker, nên nó có khả năng giữ hình dạng đối tượng tốt hơn so với opening thông thường.
+
+\begin{itemize}
+    \item \textbf{Top-hat:} Đơn giản, nhanh, phù hợp khi chữ có kích thước nhỏ hơn rõ ràng so với phần tử cấu trúc và nền biến đổi tương đối chậm.
+
+    \item \textbf{Reconstruction:} Phức tạp hơn nhưng bảo toàn hình dạng tốt hơn, đặc biệt hữu ích khi cần giữ các nét chữ mảnh, các biên sắc hoặc các thành phần liên thông của chữ.
+
+    \item \textbf{Độ nhạy với phần tử cấu trúc:} Cả hai đều phụ thuộc vào $B$, nhưng top-hat thường nhạy hơn vì opening có thể làm thay đổi hình dạng trực tiếp, còn reconstruction khôi phục lại các thành phần hợp lệ theo mask.
+
+    \item \textbf{Chất lượng rút trích:} Reconstruction thường cho kết quả sạch và ổn định hơn trong trường hợp nền không đều hoặc chữ có hình dạng phức tạp; top-hat phù hợp hơn cho xử lý nhanh và các trường hợp đơn giản.
+\end{itemize}

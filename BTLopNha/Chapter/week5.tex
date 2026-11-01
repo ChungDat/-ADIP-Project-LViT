@@ -1,0 +1,156 @@
+\chapter{Buổi 5}
+\label{Chapter5}
+\setcounter{secnumdepth}{5}
+
+\section*{Câu 1}
+\addcontentsline{toc}{section}{Câu 1}
+Chứng minh các định nghĩa về binary opening là tương đương nhau.
+
+Gọi $X \subseteq \mathbb{Z}^2$ là ảnh nhị phân và $B \subseteq \mathbb{Z}^2$ là phần tử cấu trúc. \textbf{Binary opening} của $X$ bởi $B$ thường được ký hiệu là $X\circ B$ và được định nghĩa bằng erosion trước, sau đó dilation:
+
+\begin{align}
+    X \circ B &= (X \ominus B) \oplus B, \\
+    X \circ B &= \bigcup \{ (B)_p | (B)_p \subseteq X \}.
+\end{align}
+
+trong đó $B_p=\{p+b:b\in B\}$ là phần tử cấu trúc $B$ sau khi tịnh tiến đến vị trí $p$.
+
+\textbf{Chứng minh hai định nghĩa tương đương.}
+
+Từ định nghĩa erosion, ta có:
+
+\begin{equation}
+    X\ominus B = \{p\in\mathbb{Z}^2 : B_p\subseteq X\}.
+\end{equation}
+
+Tập $X\ominus B$ gồm tất cả các vị trí $p$ mà tại đó phần tử cấu trúc $B$ có thể nằm gọn trong vật thể $X$. Khi thực hiện dilation lại với $B$, ta đặt một bản sao của $B$ tại từng vị trí $p\in X\ominus B$ và lấy hợp tất cả các bản sao đó:
+
+\begin{align}
+    (X\ominus B)\oplus B
+    &= \bigcup_{p\in X\ominus B} B_p \\
+    &= \bigcup_{p: B_p\subseteq X} B_p.
+\end{align}
+
+Do đó:
+
+\begin{equation}
+    X\circ B = (X\ominus B)\oplus B = \bigcup_{p: B_p\subseteq X} B_p.
+\end{equation}
+
+Vậy hai cách định nghĩa binary opening là tương đương.
+
+\section*{Câu 2}
+\addcontentsline{toc}{section}{Câu 2}
+Chứng minh các định nghĩa về binary closing là tương đương nhau.
+
+Gọi $X \subseteq \mathbb{Z}^2$ là ảnh nhị phân và $B \subseteq \mathbb{Z}^2$ là phần tử cấu trúc. \textbf{Binary closing} của $X$ bởi $B$ thường được ký hiệu là $X\bullet B$ và được định nghĩa bằng dilation trước, sau đó erosion:
+
+\begin{equation}
+    X\bullet B = (X\oplus B)\ominus B.
+\end{equation}
+
+Một định nghĩa tương đương quan trọng của closing là thông qua phần bù và opening:
+
+\begin{equation}
+    X\bullet B = \left(X^c \circ \hat{B}\right)^c,
+\end{equation}
+
+trong đó $X^c$ là phần bù của $X$, $\hat{B}=\{-b:b\in B\}$ là phần tử cấu trúc phản xạ, và $\circ$ là phép opening.
+
+\textbf{Chứng minh hai định nghĩa tương đương.}
+
+Ta dùng tính đối ngẫu giữa dilation và erosion:
+
+\begin{align}
+    (X\oplus B)^c &= X^c \ominus \hat{B}, \\
+    (X\ominus B)^c &= X^c \oplus \hat{B}.
+\end{align}
+
+Xét định nghĩa closing:
+
+\begin{equation}
+    X\bullet B = (X\oplus B)\ominus B.
+\end{equation}
+
+Lấy phần bù hai vế:
+
+\begin{align}
+    (X\bullet B)^c
+    &= \left((X\oplus B)\ominus B\right)^c \\
+    &= (X\oplus B)^c \oplus \hat{B} \\
+    &= (X^c\ominus \hat{B})\oplus \hat{B} \\
+    &= X^c \circ \hat{B}.
+\end{align}
+
+Lấy phần bù lần nữa, ta được:
+
+\begin{equation}
+    X\bullet B = \left(X^c \circ \hat{B}\right)^c.
+\end{equation}
+
+Vậy định nghĩa closing bằng dilation rồi erosion tương đương với định nghĩa closing là phần bù của opening trên phần bù ảnh.
+
+
+\section*{Câu 3}
+\addcontentsline{toc}{section}{Câu 3}
+Cho ảnh nhiều lỗ trống trắng trên nền đen, làm thế nào để lấp các lỗ nhỏ, chỉ giữ lại các lỗ lớn?
+
+Giả sử các lỗ trống là vùng \textbf{foreground màu trắng} trên nền đen. Mục tiêu là loại bỏ các lỗ trắng nhỏ, nhưng vẫn giữ lại các lỗ trắng lớn. Khi đó, ta có thể dùng \textbf{opening} với một phần tử cấu trúc $B$ có kích thước lớn hơn các lỗ nhỏ nhưng nhỏ hơn các lỗ lớn cần giữ.
+
+Ý tưởng như sau:
+
+\begin{enumerate}
+    \item \textbf{Erosion:} Áp dụng erosion lên ảnh $A$. Các lỗ trắng nhỏ không đủ chứa phần tử cấu trúc $B$ sẽ bị loại bỏ hoàn toàn, tức bị lấp thành nền đen. Các lỗ trắng lớn vẫn còn tồn tại nhưng bị co lại.
+
+    \item \textbf{Dilation:} Sau đó áp dụng dilation để khôi phục lại kích thước tương đối của các lỗ trắng lớn còn sống sót sau bước erosion.
+\end{enumerate}
+
+Toán tử phù hợp là opening:
+
+\begin{equation}
+    C = A \circ B = (A \ominus B) \oplus B.
+\end{equation}
+
+\section*{Câu 4}
+\addcontentsline{toc}{section}{Câu 4}
+Giải thích toán tử hit-or-miss.
+
+\textbf{Hit-or-miss} là toán tử hình thái học dùng để phát hiện một mẫu nhị phân cụ thể trong ảnh. Khác với erosion thông thường chỉ kiểm tra phần foreground, hit-or-miss kiểm tra đồng thời cả hai điều kiện: phần foreground của mẫu phải khớp với foreground của ảnh, và phần background của mẫu phải khớp với background của ảnh.
+
+Nói cách khác, một vị trí được xem là ``hit'' nếu phần foreground khớp đúng với $B_1$ và phần background cũng khớp đúng với $B_2$. Nếu một trong hai điều kiện không thỏa, vị trí đó là ``miss''. Vì vậy, hit-or-miss phù hợp để phát hiện các hình dạng nhỏ, điểm cuối, góc, giao điểm hoặc mẫu ký tự trong ảnh nhị phân.
+
+\section*{Câu 5}
+\addcontentsline{toc}{section}{Câu 5}
+Ứng dụng của toán tử hit-or-miss trong xác định chữ viết.
+
+Trong ảnh chữ viết nhị phân, mỗi ký tự có thể được xem như một tập hợp các nét, điểm cuối, góc, giao điểm và vùng rỗng. Toán tử \textbf{hit-or-miss} hữu ích vì nó có thể kiểm tra đồng thời mẫu foreground và background, từ đó phát hiện các cấu trúc đặc trưng của chữ viết.
+
+Một số ứng dụng cụ thể gồm:
+
+\begin{itemize}
+    \item \textbf{Phát hiện điểm cuối của nét:} Có thể thiết kế phần tử cấu trúc để tìm các điểm kết thúc của nét chữ, ví dụ đầu nét trong các chữ như ``L'', ``T'', ``I''.
+
+    \item \textbf{Phát hiện góc và giao điểm:} Các mẫu hit-or-miss có thể nhận ra vị trí nét rẽ, nét giao nhau hoặc góc vuông trong ký tự, giúp phân biệt các chữ có hình dạng gần giống nhau.
+
+    \item \textbf{Nhận dạng cấu trúc đặc trưng:} Ví dụ, chữ ``O'' thường có vùng rỗng bên trong, chữ ``A'' có giao điểm và vùng tam giác rỗng, chữ ``T'' có nét ngang giao với nét dọc. Các mẫu foreground--background giúp phát hiện những cấu trúc này.
+\end{itemize}
+
+Ví dụ, để phát hiện một điểm cuối của nét chữ, ta chọn $B_1$ là mẫu foreground gồm pixel trung tâm và một pixel hàng xóm thuộc nét, còn $B_2$ là các vị trí xung quanh phải là background. Nếu cả hai điều kiện khớp, vị trí đó được xem là điểm cuối. Bằng cách xoay phần tử cấu trúc theo nhiều hướng, ta có thể phát hiện điểm cuối ở các hướng khác nhau.
+
+\section*{Câu 6}
+\addcontentsline{toc}{section}{Câu 6}
+Giải thích vì sao toán tử lấp vùng có thể lấp vùng.
+
+Toán tử lấp vùng bắt đầu từ một điểm mầm nằm bên trong vùng cần lấp, sau đó liên tục giãn nở điểm mầm này bằng một phần tử cấu trúc thích hợp. Sau mỗi lần giãn nở, kết quả được giao với phần bù của biên vùng, nên phần mở rộng không thể vượt ra ngoài đường biên.
+
+Quá trình này được lặp lại cho đến khi tập điểm không còn thay đổi. Khi đó, toàn bộ phần bên trong biên đã được lan truyền và lấp đầy, còn các điểm bên ngoài biên vẫn bị loại bỏ. Vì vậy, toán tử lấp vùng có thể lấp kín một vùng khép kín dựa trên điểm mầm ban đầu và điều kiện ràng buộc bởi biên.
+
+\section*{Câu 7}
+\addcontentsline{toc}{section}{Câu 7}
+Trong toán tử rút trích thành phần liên thông, yếu tố nào giúp xác định vùng liên thông?
+
+Yếu tố quan trọng nhất là quan hệ lân cận giữa các pixel, thường được xác định bởi phần tử cấu trúc $B$. Phần tử cấu trúc cho biết một pixel được xem là liên thông với những pixel nào xung quanh nó, chẳng hạn liên thông lân cận-4 hoặc lân cận-8.
+
+Khi bắt đầu từ một điểm mầm thuộc thành phần cần rút trích, thuật toán liên tục giãn nở tập điểm hiện tại theo phần tử cấu trúc $B$, rồi giao kết quả với ảnh gốc để chỉ giữ lại các pixel thuộc cùng đối tượng. Quá trình lặp dừng khi tập điểm không còn thay đổi. Khi đó, tập thu được chính là thành phần liên thông chứa điểm mầm ban đầu.
+
+Vì vậy, vùng liên thông được xác định nhờ điểm mầm ban đầu, ảnh gốc, và đặc biệt là phần tử cấu trúc quy định kiểu liên thông giữa các pixel.

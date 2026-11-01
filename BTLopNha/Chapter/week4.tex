@@ -1,0 +1,220 @@
+\chapter{Buổi 4}
+\label{Chapter4}
+\setcounter{secnumdepth}{5}
+
+\section*{Câu 1}
+\addcontentsline{toc}{section}{Câu 1}
+Trong các công trình nghiên cứu y khoa thuộc lĩnh vực Thị giác Máy tính, những sai lầm hoặc thiếu sót nghiêm trọng thường gặp là gì?
+
+Trong nghiên cứu thị giác máy tính cho y khoa, sai sót không chỉ nằm ở thuật toán mà còn nằm ở cách xử lý dữ liệu, thiết kế thí nghiệm và diễn giải kết quả. Vì dữ liệu y khoa gắn trực tiếp với chẩn đoán và quyết định điều trị, các thiếu sót nhỏ trong tiền xử lý hoặc đánh giá mô hình có thể dẫn đến kết luận sai lệch.
+
+\begin{itemize}
+    \item \textbf{Làm mất thông tin ảnh gốc:} Ảnh y khoa thường được lưu ở định dạng DICOM, có độ sâu mức xám cao và chứa nhiều thông tin lâm sàng quan trọng. Nếu chuyển sang JPEG hoặc PNG 8 bit để huấn luyện, ảnh có thể mất chi tiết cường độ, giảm độ tương phản mô mềm và làm sai lệch dấu hiệu bệnh lý.
+
+    \item \textbf{Giảm độ phân giải quá mạnh:} Nhiều mô hình học sâu yêu cầu ảnh đầu vào nhỏ, ví dụ $224 \times 224$. Tuy nhiên, ảnh y khoa gốc có thể có độ phân giải rất cao. Khi thu nhỏ ảnh quá mức, các tổn thương nhỏ như vi nốt, vi vôi hóa hoặc đường biên mô bất thường có thể bị mất.
+
+    \item \textbf{Không kiểm soát rò rỉ dữ liệu:} Nếu ảnh của cùng một bệnh nhân xuất hiện cả trong tập huấn luyện và tập kiểm tra, mô hình có thể học đặc điểm riêng của bệnh nhân thay vì học dấu hiệu bệnh. Điều này làm kết quả đánh giá cao giả tạo.
+\end{itemize}
+
+Ví dụ về mất thông tin do chuyển đổi ảnh: ảnh y khoa có thể dùng 12 bit cho mức xám, tương đương $2^{12}=4096$ mức cường độ. Nếu chuyển sang ảnh 8 bit, ảnh chỉ còn $2^8=256$ mức cường độ. Như vậy, số mức biểu diễn cường độ giảm $16$ lần.
+
+\begin{itemize}
+    \item \textbf{Ảnh y khoa gốc:} $2048 \times 1024 \times 12 = 25\,165\,824$ bit $\approx 3$ MB.
+
+    \item \textbf{Ảnh huấn luyện đã thu nhỏ:} $224 \times 224 \times 8 = 401\,408$ bit $\approx 49$ KB.
+\end{itemize}
+
+Sự chênh lệch này cho thấy mô hình có thể được huấn luyện trên dữ liệu đã mất nhiều thông tin so với dữ liệu y khoa ban đầu. Vì vậy, khi nghiên cứu thị giác máy tính trong y khoa, cần đặc biệt chú ý đến định dạng dữ liệu, độ sâu bit, độ phân giải, quy trình chia tập dữ liệu, tiền xử lý ảnh và ý nghĩa lâm sàng của các thông tin bị loại bỏ.
+
+\section*{Câu 2}
+\addcontentsline{toc}{section}{Câu 2}
+Chứng minh các định nghĩa về binary dilation là tương đương nhau.
+
+Gọi $X \subseteq \mathbb{Z}^2$ là ảnh nhị phân và $B \subseteq \mathbb{Z}^2$ là phần tử cấu trúc. Phép \textbf{binary dilation} có thể được viết dưới nhiều dạng tương đương:
+
+\begin{align}
+    X \oplus B
+    &= \{p \in \epsilon^2 : p = x + b,\ x \in X,\ b \in B\}, \\
+    X \oplus B
+    &= \{p \in \epsilon^2 : (\hat{B})_p \cap X \neq \emptyset\}, \\
+    X \oplus B
+    &= \bigcup_{b \in B} X_b,
+\end{align}
+
+trong đó $\hat{B}=\{-b:b\in B\}$ là phần tử cấu trúc phản xạ qua gốc tọa độ và $X_b=\{x+b:x\in X\}$ là tập $X$ sau khi tịnh tiến bởi vector $b$.
+
+\textbf{Chứng minh dạng 1 và dạng 3 tương đương.}
+
+Từ định nghĩa thứ nhất, một điểm $p$ thuộc $X \oplus B$ khi và chỉ khi tồn tại $x\in X$ và $b\in B$ sao cho $p=x+b$. Với mỗi $b\in B$, tập tất cả các điểm có dạng $x+b$ chính là $X_b$. Lấy hợp trên mọi $b\in B$ ta được:
+
+\begin{equation}
+    X \oplus B = \bigcup_{b \in B} X_b.
+\end{equation}
+
+Do đó, định nghĩa theo tổng Minkowski và định nghĩa theo hợp các bản tịnh tiến của $X$ là tương đương.
+
+\textbf{Chứng minh dạng 1 và dạng 2 tương đương.}
+
+Ta xét điều kiện:
+\begin{equation}
+    (\hat{B})_p \cap X \neq \emptyset.
+\end{equation}
+
+Điều này có nghĩa là tồn tại một điểm $x\in X$ và một điểm $q\in (\hat{B})_p$ sao cho $x=q$. Vì $(\hat{B})_p=\{p+\hat{b}:\hat{b}\in\hat{B}\}$, nên tồn tại $\hat{b}\in\hat{B}$ sao cho:
+
+\begin{equation}
+    x = p + \hat{b}.
+\end{equation}
+
+Do $\hat{b}\in\hat{B}$ nên tồn tại $b\in B$ sao cho $\hat{b}=-b$. Khi đó:
+
+\begin{equation}
+    x = p - b \quad \Leftrightarrow \quad p = x + b.
+\end{equation}
+
+Vì $x\in X$ và $b\in B$, điều kiện này đúng chính xác khi $p$ thuộc tập $\{p:x+b=p,\ x\in X,\ b\in B\}$. Đây là định nghĩa thứ nhất của dilation.
+
+Vậy ba biểu thức trên đều mô tả cùng một phép toán: đặt phần tử cấu trúc $B$ lên từng điểm foreground của $X$, hoặc tương đương là tìm các vị trí $p$ sao cho bản phản xạ của $B$ khi đặt tại $p$ có giao với $X$.
+
+\section*{Câu 3}
+\addcontentsline{toc}{section}{Câu 3}
+Đề xuất cách tính toán nhanh dilation bằng trực giác.
+
+Trực giác của \textbf{dilation} là: mỗi pixel foreground của ảnh nhị phân sẽ ``phát tán'' hoặc ``đóng dấu'' hình dạng của phần tử cấu trúc ra xung quanh nó. Vì vậy, thay vì kiểm tra mọi vị trí trong ảnh xem phần tử cấu trúc có giao với vật thể hay không, ta có thể duyệt trực tiếp qua các pixel foreground và vẽ phần tử cấu trúc tại các vị trí đó.
+
+Cách tính nhanh có thể hiểu như sau:
+
+\begin{enumerate}
+    \item Tạo một ảnh kết quả ban đầu toàn nền, tức toàn giá trị $0$.
+
+    \item Duyệt qua từng pixel $x$ của ảnh gốc $X$.
+
+    \item Nếu $x$ là pixel foreground, tức $x\in X$, đặt tâm của phần tử cấu trúc $B$ tại vị trí $x$.
+
+    \item Phần tử cấu trúc sẽ được "in" lên ảnh kết quả tại vị trí tương ứng.
+
+    \item Lặp lại quá trình này cho mọi pixel foreground của $X$.
+\end{enumerate}
+
+\section*{Câu 6}
+\addcontentsline{toc}{section}{Câu 6}
+Cho ví dụ dùng dilation làm hình ảnh ``ốm đi''.
+
+Thông thường, nếu áp dụng dilation lên vùng foreground, vật thể sẽ dày hơn. Tuy nhiên, ta vẫn có thể dùng ý tưởng dilation để làm vật thể foreground ``ốm đi'' bằng cách áp dụng dilation lên vùng \textbf{background} thay vì foreground.
+
+Giả sử ảnh nhị phân có foreground là vật thể màu trắng và background là nền màu đen. Ta xét phần bù của ảnh, tức đổi foreground thành background và background thành foreground. Sau đó, ta thực hiện dilation trên phần background này. Khi background được dilation, nó sẽ lan rộng vào vùng biên của vật thể ban đầu. Nếu đổi ảnh trở lại, vật thể foreground sẽ bị mỏng đi.
+
+Ví dụ: Nếu $X$ là một hình chữ nhật trắng trên nền đen và $B$ là mặt nạ $3\times 3$, thì dilation trên $X^c$ sẽ làm vùng nền đen nở vào biên của hình chữ nhật. Sau khi lấy phần bù lại, hình chữ nhật trắng trở nên nhỏ hơn và mỏng hơn. Như vậy, dilation không trực tiếp làm foreground ốm đi; nó làm foreground ốm đi khi ta dilation trên background rồi lấy phần bù.
+
+\section*{Câu 7}
+\addcontentsline{toc}{section}{Câu 7}
+Chứng minh các định nghĩa binary erosion là tương đương nhau.
+
+Gọi $X \subseteq \mathbb{Z}^2$ là ảnh nhị phân và $B \subseteq \mathbb{Z}^2$ là phần tử cấu trúc. Phép \textbf{binary erosion} giữ lại những vị trí $p$ sao cho khi đặt phần tử cấu trúc $B$ tại $p$, toàn bộ $B$ nằm bên trong $X$.
+
+Các định nghĩa thường dùng là:
+
+\begin{align}
+    X \ominus B
+    &= \{p \in \epsilon^2 : p + b \in X,\ \forall b \in B\}, \\
+    X \ominus B
+    &= \{p \in \epsilon^2 : B_p \subseteq X\}, \\
+    X \ominus B
+    &= \bigcap_{b \in B} X_{-b},
+\end{align}
+
+trong đó $B_p=\{p+b:b\in B\}$ là phần tử cấu trúc $B$ sau khi tịnh tiến đến vị trí $p$, và $X_{-b}=\{x-b:x\in X\}$ là tập $X$ tịnh tiến bởi vector $-b$.
+
+\textbf{Chứng minh dạng 1 và dạng 2 tương đương.}
+
+Theo định nghĩa của $B_p$, ta có:
+
+\begin{equation}
+    B_p = \{p+b:b\in B\}.
+\end{equation}
+
+Điều kiện $B_p\subseteq X$ có nghĩa là mọi điểm của $B_p$ đều nằm trong $X$. Nói cách khác:
+
+\begin{equation}
+    p+b\in X,\quad \forall b\in B.
+\end{equation}
+
+Đây chính là điều kiện trong định nghĩa thứ nhất. Vì vậy:
+
+\begin{equation}
+    \{p:p+b\in X,\ \forall b\in B\}=\{p:B_p\subseteq X\}.
+\end{equation}
+
+\textbf{Chứng minh dạng 1 và dạng 3 tương đương.}
+
+Từ định nghĩa thứ nhất, $p\in X\ominus B$ khi và chỉ khi:
+
+\begin{equation}
+    p+b\in X,\quad \forall b\in B.
+\end{equation}
+
+Điều kiện $p+b\in X$ tương đương với $p\in X_{-b}$, vì $X_{-b}$ là tập các điểm $x-b$ với $x\in X$. Do điều kiện này phải đúng với mọi $b\in B$, nên $p$ phải thuộc giao của tất cả các tập $X_{-b}$:
+
+\begin{equation}
+    p\in \bigcap_{b\in B} X_{-b}.
+\end{equation}
+
+Suy ra:
+
+\begin{equation}
+    X\ominus B=\bigcap_{b\in B}X_{-b}.
+\end{equation}
+
+\section*{Câu 8}
+\addcontentsline{toc}{section}{Câu 8}
+Tính toán trực giác $A \ominus B$.
+
+Trực giác của erosion là kiểm tra xem phần tử cấu trúc $B$ có thể ``nằm gọn'' bên trong vật thể $A$ tại từng vị trí hay không. Ta lần lượt đặt tâm của $B$ lên từng pixel trong ảnh. Nếu toàn bộ các điểm foreground của $B$ đều nằm trong vùng foreground của $A$, thì pixel tại tâm được giữ lại là foreground trong ảnh kết quả. Ngược lại, nếu chỉ cần một điểm của $B$ rơi ra ngoài $A$, pixel tại tâm sẽ bị loại bỏ.
+
+Nói cách khác, $A \ominus B$ chỉ giữ lại các vị trí mà $B$ khớp hoàn toàn bên trong $A$. Vì vậy, erosion thường làm vật thể nhỏ hơn, làm mỏng biên và loại bỏ các chi tiết nhỏ không đủ chứa phần tử cấu trúc.
+
+\section*{Câu 9}
+\addcontentsline{toc}{section}{Câu 9}
+Trình bày cách ứng dụng erosion để tìm biên cạnh.
+
+Các bước thực hiện:
+
+\begin{enumerate}
+    \item Chọn phần tử cấu trúc $B$.
+
+    \item Áp dụng erosion lên ảnh nhị phân $A$ để thu được ảnh bị co lại $A\ominus B$.
+
+    \item Lấy hiệu giữa ảnh gốc và ảnh bị co lại: $A - (A\ominus B)$.
+
+    \item Phần còn lại chính là các pixel biên, vì đó là các pixel có trong ảnh gốc nhưng bị erosion loại bỏ.
+\end{enumerate}
+
+Trực giác là: erosion gọt bớt một lớp pixel ở rìa vật thể. Khi so sánh ảnh trước và sau khi gọt, lớp pixel bị gọt đi chính là biên. Kích thước và hình dạng của biên phụ thuộc vào phần tử cấu trúc $B$: nếu $B$ lớn hơn, biên thu được sẽ dày hơn.
+
+\section*{Câu 10}
+\addcontentsline{toc}{section}{Câu 10}
+So sánh phát hiện biên cạnh bằng erosion và các kernel Prewitt, Sobel, Frei-Chen.
+
+Phát hiện biên bằng \textbf{erosion} và phát hiện biên bằng các kernel như \textbf{Prewitt}, \textbf{Sobel}, \textbf{Frei-Chen} đều nhằm tìm vùng chuyển tiếp giữa các đối tượng. Tuy nhiên, hai hướng này dựa trên nguyên lý khác nhau: erosion là phương pháp hình thái học thường dùng cho ảnh nhị phân, còn Prewitt, Sobel và Frei-Chen là các bộ lọc gradient thường dùng cho ảnh xám hoặc ảnh màu.
+
+\small
+\begin{longtable}{|p{0.22\textwidth}|p{0.34\textwidth}|p{0.34\textwidth}|}
+\hline
+\textbf{Tiêu chí} & \textbf{Biên bằng erosion} & \textbf{Prewitt, Sobel, Frei-Chen} \\
+\hline
+\textbf{Nguyên lý} & Dùng erosion làm co vật thể, sau đó lấy ảnh gốc trừ ảnh đã co: $\partial A=A-(A\ominus B)$. & Tính biến thiên cường độ ảnh theo hướng ngang, dọc hoặc nhiều hướng bằng kernel tích chập. \\
+\hline
+\textbf{Loại ảnh phù hợp} & Phù hợp nhất với ảnh nhị phân hoặc ảnh đã phân đoạn. & Phù hợp với ảnh xám, ảnh màu hoặc ảnh có thay đổi cường độ liên tục. \\
+\hline
+\textbf{Ý nghĩa biên} & Biên là lớp pixel bị mất khi vật thể bị erosion. & Biên là vùng có gradient lớn, tức cường độ ảnh thay đổi mạnh. \\
+\hline
+\textbf{Thông tin thu được} & Chỉ cho biết vị trí biên của vật thể nhị phân. & Cho biết vị trí biên, hướng biên và độ lớn gradient của biên. \\
+\hline
+\textbf{Độ nhạy nhiễu} & Ít nhạy với nhiễu nhỏ nếu ảnh nhị phân đã được xử lý tốt, nhưng phụ thuộc mạnh vào kết quả threshold/segmentation. & Nhạy với nhiễu cường độ; thường cần làm trơn ảnh trước khi phát hiện biên. \\
+\hline
+\textbf{Kết quả biên} & Biên thường rõ, rời rạc và nằm trên vật thể nhị phân. & Biên thể hiện mức độ thay đổi sáng tối, có thể cần ngưỡng hóa để tạo biên nhị phân. \\
+\hline
+\textbf{Ứng dụng} & Tìm biên đối tượng đã được tách nền, xử lý hình thái, phân tích ảnh nhị phân. & Phát hiện cạnh trong ảnh tự nhiên, ảnh y khoa, ảnh công nghiệp trước khi phân đoạn hoặc nhận dạng. \\
+\hline
+\end{longtable}
+\normalsize

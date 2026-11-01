@@ -1,0 +1,115 @@
+\chapter{Nhận xét nội dung thuyết trình của các nhóm khác}
+\label{Chapter7}
+\setcounter{secnumdepth}{5}
+
+\section*{Phân đoạn ảnh y khoa dựa vào VLM}
+\addcontentsline{toc}{section}{Phân đoạn ảnh y khoa dựa vào VLM}
+
+\begin{itemize}
+    \item Cần làm slide thuyết trình.
+
+    \item Báo cáo có đi vào chi tiết kĩ thuật nhưng trình bày lan man.
+
+    \item Chưa hiểu về cơ chế fusion PVL Adapter.
+\end{itemize}
+
+\section*{Phân đoạn ảnh với dữ liệu nhãn hạn chế + visual prompt}
+\addcontentsline{toc}{section}{Phân đoạn ảnh với dữ liệu nhãn hạn chế + visual prompt}
+
+\section*{Phân đoạn ảnh với dữ liệu nhãn hạn chế + text prompt}
+\addcontentsline{toc}{section}{Phân đoạn ảnh với dữ liệu nhãn hạn chế + text prompt}
+
+Nhóm em thực hiện.
+
+\begin{itemize}
+    \item Chưa làm rõ đầu ra của phân đoạn là probability map.
+
+    \item Chưa trình bày được các thông số của CNN được cài đặt như stride, size, padding.
+
+    \item Chưa phân biệt được online và offline pipeline của mô hình.
+
+    \item Chưa chỉ ra được mô-đun quality control của generator trong tạo pseudo mask.
+
+    \item Chưa chỉ ra được vì sao CNN phải qua patch embedding để vào nhánh ViT.
+\end{itemize}
+
+- Đầu ra của phân đoạn là probability map chứ ko phải là mask
+- Chưa trình bày được các thông số của CNN được cài đặt như stride, size, padding
+- Chưa phân biệt được online và offline pipeline của mô hình
+- Chưa chỉ ra được mô-đun quality control của generator trong tạo pseudo mask
+- Chưa chỉ ra được vì sao CNN phải qua patch embedding để vào nhánh ViT
+
+\section*{Phân lớp ảnh y khoa dựa vào VLM}
+\addcontentsline{toc}{section}{Phân lớp ảnh y khoa dựa vào VLM}
+
+\begin{itemize}
+    \item Còn nhầm lẫn về đầu ra của module encoder trong mô hình: tác vụ linear project đã được tích hợp vào encoder nên đầu ra là embedding ở không gian chung, không phải không gian đặc trưng riêng cho ảnh hay text.
+
+    \item Chưa làm rõ kiến trúc được sử dụng ở module image encoder.
+
+    \item Chưa làm rõ sự cải tiến của hàm lỗi trong mô hình.
+
+    \item Cần trình bày chi tiết hơn về cơ chế de-coupling trong mô hình.
+
+    \item Trình bày khó hiểu và chưa rõ ràng về false negative.
+\end{itemize}
+
+
+\section*{Phân lớp ảnh với dữ liệu học hạn chế}
+\addcontentsline{toc}{section}{Phân lớp ảnh với dữ liệu học hạn chế}
+
+\begin{itemize}
+    \item Giải thích chưa rõ ràng các bước hoạt động của phần phương pháp.
+
+    \item Chưa vẽ được quy trình của bài toán phân lớp.
+
+    \item Chưa trình bày được bước fusion đặc trưng.
+\end{itemize}
+
+\section*{Mô hình học sâu đa phương thức hỗ trợ chẩn đoán và điều trị bệnh lý xương dựa trên dữ liệu lâm sàng và cận lâm sàng}
+
+Không có nhóm thực hiện.
+
+\addcontentsline{toc}{section}{Mô hình học sâu đa phương thức hỗ trợ chẩn đoán và điều trị bệnh lý xương dựa trên dữ liệu lâm sàng và cận lâm sàng}
+
+\section*{Mô hình học sâu đa phương thức hỗ trợ chẩn đoán và điều trị bệnh lý xương dựa trên dữ liệu lâm sàng và cận lâm sàng + RAG}
+\addcontentsline{toc}{section}{Mô hình học sâu đa phương thức hỗ trợ chẩn đoán và điều trị bệnh lý xương dựa trên dữ liệu lâm sàng và cận lâm sàng + RAG}
+
+\begin{itemize}
+    \item Chưa xác định được 2 mức đầu ra của mô hình gồm understanding và generating.
+
+    \item Chưa xác định được RAG sẽ được tích hợp vào đâu trong mô hình.
+
+    \item Chưa xác định được RAG nhận vào cái gì và trả ra cái gì cho mô hình.
+\end{itemize}
+
+
+\section*{CVQA dựa vào VLM, Multimodal LLM}
+\addcontentsline{toc}{section}{CVQA dựa vào VLM, Multimodal LLM}
+
+\begin{itemize}
+    \item Chưa làm rõ vai trò của từng thành phần như image encoder, language model.
+
+    \item Chưa làm rõ cơ chế kết nối giữa đặc trưng ảnh và biểu diễn ngôn ngữ, cũng như sự khác nhau giữa mô hình thị giác-ngôn ngữ tổng quát và mô hình đã được điều chỉnh cho miền y khoa.
+    
+    \item Chưa so sánh rõ giữa các bài báo.
+
+    \item Cần bổ sung sơ đồ kiến trúc, pipeline xử lý, bảng so sánh dữ liệu huấn luyện, ưu nhược điểm và giới hạn khi áp dụng vào môi trường lâm sàng.
+\end{itemize}
+
+\section*{CVQA dựa vào text prompt}
+\addcontentsline{toc}{section}{CVQA dựa vào text prompt}
+
+\section*{CVQA dựa vào visual prompt}
+\addcontentsline{toc}{section}{CVQA dựa vào visual prompt}
+
+\section*{Phân đoạn ảnh với mô hình bán giám sát}
+\addcontentsline{toc}{section}{Phân đoạn ảnh với mô hình bán giám sát}
+
+\section*{Phân đoạn ảnh y khoa với mô hình bán giám sát}
+\addcontentsline{toc}{section}{Phân đoạn ảnh y khoa với mô hình bán giám sát}
+
+\section*{Phân lớp ảnh với dữ liệu học hạn chế dựa vào Clip Adapter}
+\addcontentsline{toc}{section}{Phân lớp ảnh với dữ liệu học hạn chế dựa vào Clip Adapter}
+
+Các đề tài còn lại bị bỏ trống do sai sót trong việc ghi chú lại phần nhận xét trình bày của các nhóm.

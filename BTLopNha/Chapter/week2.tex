@@ -1,0 +1,123 @@
+\chapter{Buổi 2}
+\label{Chapter2}
+\setcounter{secnumdepth}{5}
+
+\section*{Câu 1}
+\addcontentsline{toc}{section}{Câu 1}
+So sánh sự khác biệt, lập bảng về phân đoạn ảnh y khoa dựa vào VLM, Visual Prompt, Text Prompt.
+
+\textbf{VLM (CLIP)} học không gian nhúng chung giữa ảnh và văn bản, nên mạnh ở nhận diện ngữ nghĩa và zero-shot. Tuy nhiên, CLIP không trực tiếp tạo mặt nạ pixel nên thường cần thêm segmentation decoder.
+
+\textbf{Visual Prompting (SAM)} dùng điểm, hộp bao, nét vẽ hoặc mặt nạ gợi ý để tạo phân đoạn. Cách này linh hoạt, phù hợp quy trình bán tự động có bác sĩ tương tác, nhưng phụ thuộc mạnh vào chất lượng prompt.
+
+\textbf{Text Prompting (LViT)} dùng mô tả ngôn ngữ tự nhiên để hướng dẫn phân đoạn, ví dụ vị trí giải phẫu hoặc đặc điểm tổn thương. Cách này khai thác tốt tri thức lâm sàng nhưng nhạy với prompt mơ hồ hoặc sai thuật ngữ.
+
+\small
+\begin{longtable}{|p{0.17\textwidth}|p{0.24\textwidth}|p{0.24\textwidth}|p{0.24\textwidth}|}
+\hline
+\textbf{Tiêu chí} & \textbf{VLM (CLIP)} & \textbf{Visual Prompt (SAM)} & \textbf{Text Prompt (LViT)} \\
+\hline
+\textbf{Đầu vào} & Nhãn hoặc mô tả văn bản. & Điểm, hộp bao, nét vẽ, mặt nạ gợi ý. & Mô tả y khoa bằng ngôn ngữ tự nhiên. \\
+\hline
+\textbf{Cơ chế} & Đối sánh đặc trưng ảnh--văn bản; cần decoder để phân đoạn. & Dựa trên hình học, biên ảnh và vùng quanh prompt. & Dùng attention/cross-attention để văn bản định hướng vùng ảnh. \\
+\hline
+\textbf{Ngữ nghĩa y khoa} & Trung bình; hiểu khái niệm tổng quát. & Thấp; chủ yếu hiểu hình dạng và biên. & Cao hơn nếu có dữ liệu ảnh--văn bản y khoa tốt. \\
+\hline
+\textbf{Ưu điểm} & Tổng quát hóa tốt với lớp mới. & Tương tác nhanh, dễ chỉnh sửa. & Tận dụng ngữ cảnh và tri thức chuyên gia. \\
+\hline
+\textbf{Hạn chế} & Biên phân đoạn kém nếu thiếu decoder chuyên biệt. & Không tự hiểu bản chất bệnh lý. & Phụ thuộc chất lượng prompt văn bản. \\
+\hline
+\end{longtable}
+\normalsize
+
+\section*{Câu 2}
+\addcontentsline{toc}{section}{Câu 2}
+Multimodal Deep Learning về mặt học thuật có gì khó hơn Deep Learning?
+
+\textbf{Multimodal Deep Learning} (MMDL) khó hơn deep learning đơn phương thức vì phải học, căn chỉnh và hợp nhất nhiều loại dữ liệu khác nhau như ảnh, văn bản, âm thanh, tín hiệu cảm biến hoặc dữ liệu bảng. Mỗi phương thức có cấu trúc riêng: ảnh mang thông tin không gian, văn bản là chuỗi rời rạc có ngữ nghĩa, còn âm thanh thay đổi theo thời gian.
+
+Các thách thức học thuật chính gồm:
+\begin{itemize}
+    \item \textbf{Biểu diễn dữ liệu:} Mô hình phải đưa nhiều phương thức dị thể vào không gian biểu diễn chung hoặc liên kết được với nhau.
+    \item \textbf{Căn chỉnh:} Cần ghép đúng thông tin tương ứng giữa ảnh, văn bản, âm thanh hoặc tín hiệu theo thời gian, không gian hay ngữ nghĩa.
+    \item \textbf{Hợp nhất:} Phải quyết định kết hợp dữ liệu ở giai đoạn đầu, giữa hay cuối mô hình.
+    \item \textbf{Modality dominance:} Một phương thức có tín hiệu mạnh có thể lấn át các phương thức còn lại.
+    \item \textbf{Dữ liệu thiếu:} Khi triển khai thực tế, không phải lúc nào cũng có đủ tất cả phương thức như khi huấn luyện.
+\end{itemize}
+
+\small
+\begin{longtable}{|p{0.25\textwidth}|p{0.32\textwidth}|p{0.32\textwidth}|}
+\hline
+\textbf{Tiêu chí} & \textbf{Deep Learning đơn phương thức} & \textbf{Multimodal Deep Learning} \\
+\hline
+\textbf{Dữ liệu} & Một loại dữ liệu chính. & Nhiều loại dữ liệu dị thể. \\
+\hline
+\textbf{Biểu diễn} & Học đặc trưng cho một phương thức. & Cần không gian chung hoặc cơ chế liên kết. \\
+\hline
+\textbf{Căn chỉnh} & Ít cần căn chỉnh liên phương thức. & Cần căn chỉnh thời gian, không gian hoặc ngữ nghĩa. \\
+\hline
+\textbf{Tối ưu} & Tối ưu trên một phân phối dữ liệu. & Phải cân bằng nhiều nguồn tín hiệu. \\
+\hline
+\textbf{Triển khai} & Ít gặp vấn đề thiếu phương thức. & Dễ giảm hiệu năng khi thiếu một phương thức. \\
+\hline
+\end{longtable}
+\normalsize
+
+\section*{Câu 3}
+\addcontentsline{toc}{section}{Câu 3}
+Multimodal Deep Learning về mặt ứng dụng có tầm ảnh hưởng như thế nào?
+
+MMDL có tầm ảnh hưởng lớn vì giúp AI hiểu bối cảnh đầy đủ hơn bằng cách kết hợp nhiều nguồn thông tin. Thay vì chỉ nhìn ảnh hoặc chỉ đọc văn bản, mô hình có thể đồng thời xử lý ảnh, báo cáo, âm thanh, cảm biến và dữ liệu bảng.
+
+\begin{itemize}
+    \item \textbf{Y tế:} Kết hợp ảnh CT/MRI/X-quang, bệnh án, xét nghiệm và tín hiệu sinh tồn để hỗ trợ chẩn đoán, tiên lượng và cá nhân hóa điều trị.
+    \item \textbf{Xe tự hành và robot:} Hợp nhất camera, LiDAR, radar, GPS và bản đồ để nhận thức môi trường ổn định hơn trong điều kiện khó.
+    \item \textbf{Thương mại điện tử:} Kết hợp ảnh sản phẩm, mô tả, đánh giá và hành vi người dùng để tìm kiếm và gợi ý sản phẩm chính xác hơn.
+    \item \textbf{An ninh số:} Phát hiện deepfake hoặc gian lận bằng cách kiểm tra đồng thời khuôn mặt, giọng nói, chuyển động môi và ngữ cảnh.
+    \item \textbf{Trợ lý ảo:} Cho phép hệ thống hiểu yêu cầu qua văn bản, giọng nói, hình ảnh và màn hình, từ đó phản hồi tự nhiên hơn.
+\end{itemize}
+
+Nhìn chung, MMDL giúp AI chuyển từ xử lý dữ liệu đơn lẻ sang hiểu tình huống đa chiều, nên đặc biệt quan trọng trong các lĩnh vực cần quyết định chính xác và an toàn.
+
+\section*{Câu 4}
+\addcontentsline{toc}{section}{Câu 4}
+Out-of-distribution là gì?
+
+\textbf{Out-of-distribution} (OOD) là dữ liệu khi triển khai khác đáng kể so với dữ liệu huấn luyện. Nếu không phát hiện được OOD, mô hình có thể ép mẫu lạ vào một nhãn quen thuộc và dự đoán sai với độ tự tin cao.
+
+Ví dụ, mô hình phân biệt chó và mèo được huấn luyện bằng ảnh rõ, chụp trong nhà. Ảnh mèo trong điều kiện tương tự là \textbf{in-distribution}. Ngược lại, ảnh báo gấm, thú nhồi bông hoặc robot giống chó là \textbf{OOD} vì chúng không thuộc phân phối huấn luyện.
+
+Các dạng dịch chuyển phân phối thường gặp:
+\begin{itemize}
+    \item \textbf{Covariate shift:} Phân phối đầu vào $P(X)$ thay đổi, nhưng quan hệ $P(Y|X)$ gần như giữ nguyên. Ví dụ ảnh X-quang từ máy cũ bị nhiễu hơn dữ liệu huấn luyện.
+    \item \textbf{Concept drift:} Quan hệ giữa đầu vào và nhãn thay đổi theo thời gian hoặc bối cảnh. Ví dụ ý nghĩa từ khóa ``khẩu trang'' thay đổi trước và trong dịch bệnh.
+    \item \textbf{Label shift:} Tỷ lệ các lớp $P(Y)$ thay đổi. Ví dụ mô hình chẩn đoán huấn luyện ở nơi có nhiều sốt xuất huyết nhưng triển khai ở vùng ít bệnh này.
+\end{itemize}
+
+OOD nguy hiểm trong y tế, xe tự hành, tài chính và an ninh vì mô hình có thể quá tự tin trước tình huống hiếm hoặc chưa từng thấy. Do đó, hệ thống thực tế cần cơ chế cảnh báo, từ chối dự đoán hoặc yêu cầu con người kiểm tra thêm.
+
+\section*{Câu 5}
+\addcontentsline{toc}{section}{Câu 5}
+Foundation Model là gì? Prior Knowledge là gì?
+
+\subsection*{1. Foundation Model}
+
+\textbf{Foundation Model} (mô hình nền tảng) là mô hình AI quy mô lớn, được huấn luyện trên dữ liệu rất lớn và đa dạng, thường bằng học tự giám sát hoặc dữ liệu chưa gán nhãn. Sau huấn luyện, mô hình có thể được fine-tune, dùng prompt hoặc tích hợp vào hệ thống khác để giải quyết nhiều tác vụ.
+
+Ví dụ: GPT, Gemini hoặc Llama dùng cho xử lý ngôn ngữ; SAM dùng cho phân đoạn ảnh; các mô hình ảnh--văn bản dùng cho mô tả ảnh, tìm kiếm ảnh hoặc phân tích ảnh y khoa kèm báo cáo.
+
+\subsection*{2. Prior Knowledge}
+
+\textbf{Prior Knowledge} (tri thức tiên nghiệm) là các hiểu biết, giả định hoặc ràng buộc có trước khi mô hình học một bài toán cụ thể. Nó giúp thu hẹp không gian tìm kiếm, làm mô hình học nhanh hơn, ổn định hơn và cần ít dữ liệu hơn.
+
+Các dạng prior knowledge thường gặp:
+\begin{itemize}
+    \item \textbf{Inductive bias:} Giả định trong kiến trúc, như CNN tận dụng tính cục bộ của ảnh, Transformer học quan hệ token bằng attention.
+    \item \textbf{Trọng số huấn luyện trước:} Trọng số từ ResNet, LLM hoặc foundation model chứa đặc trưng tổng quát để chuyển sang tác vụ mới.
+    \item \textbf{Tri thức chuyên ngành:} Kiến thức giải phẫu, vật lý, luật nghiệp vụ hoặc quy tắc đạo đức được đưa vào dữ liệu, loss, hậu xử lý hoặc prompt.
+    \item \textbf{Ràng buộc bài toán:} Ví dụ vùng cơ quan trong ảnh y khoa thường liên tục, vật thể vật lý không di chuyển phi lý.
+\end{itemize}
+
+\subsection*{3. Mối liên hệ}
+
+Foundation model có thể xem là một dạng prior knowledge quy mô lớn. Khi dùng mô hình đã huấn luyện sẵn cho tác vụ mới, ta tận dụng tri thức tổng quát mà mô hình đã học thay vì huấn luyện lại từ đầu.
